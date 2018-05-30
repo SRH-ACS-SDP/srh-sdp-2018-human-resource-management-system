@@ -2,15 +2,15 @@ package sdpsose2018.hrms;
 
 public class Location {
 
-	int LocationId;
+	int id;
 	String name;
 	String address;
 	String details;
-	int CountryId;
+	int countryId;
 
 Location()
 {
-	
+
 }
 
 }
