@@ -2,7 +2,7 @@ package sdpsose2018.hrms;
 
 public class Job {
 
-	int jobId;
+	int id;
 	String title;
 	String description;
 	double minSalary;
