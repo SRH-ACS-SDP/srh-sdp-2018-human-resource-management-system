@@ -12,6 +12,9 @@ public class Employee {
 	int phoneNumber;
 	String eMail;
 	MaritalStatus maritalStatus;
+	String details;
+	
+	public Employee() { }
 	
 	public enum Gender { Male,Female }
 	
