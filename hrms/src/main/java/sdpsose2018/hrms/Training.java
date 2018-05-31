@@ -1,10 +1,10 @@
 package sdpsose2018.hrms;
 
-public class Course {
+public class Training {
 
-	int trainingId;
-	int employeeId;
 	int id;
+	int employeeId;
+	int courseId;
 	int conductorId;
 	double date;
 	double result;
