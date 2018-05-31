@@ -2,7 +2,7 @@ package sdpsose2018.hrms;
 
 public class Country {
 
-	int Id;
+	int id;
 	String name;
 	String language;
 	String currency;
