@@ -4,7 +4,7 @@ public class EmployeeJobAssignment {
 	
 	int employeeId;
 	int jobId;
-	int supeervisorId;
+	int supervisorId;
 	int departmentId;
 	double startDate;
 	double endDate;
