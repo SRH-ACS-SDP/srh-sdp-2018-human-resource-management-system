@@ -14,6 +14,9 @@ public class DatabaseConnection {
 	private String user;
 	private String password;
 	private String connectionString;
+	private boolean isClosed;
+	
+	private Connection connection;
 	
 	/**
 	 * Constructor of DatabaseConnection
@@ -79,18 +82,51 @@ public class DatabaseConnection {
 	 * @param sql - String The SQL String
 	 * @return ResultSet - Results of the SQL
 	 */
-	public ResultSet executeSQL(String sql) {
+	public ResultSet execute(String sql) {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection connection = DriverManager.getConnection(connectionString, user, password);
+			connection = DriverManager.getConnection(connectionString, user, password);
+			isClosed = false;
 			Statement statement = connection.createStatement();
 			ResultSet results = statement.executeQuery(sql);
-			connection.close();
 			return results;
 			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return null;
+		}
+	}
+	
+	/**
+	 * This method is used for modifying data with SQL strings.
+	 * @param sql - String The SQL String
+	 * @return boolean - True if successful, false if not.
+	 */
+	public boolean update(String sql) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			connection = DriverManager.getConnection(connectionString, user, password);
+			isClosed = false;
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(sql);
+			return true;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+	}
+	
+	/**
+	 * Closes the connection if it isn't closed.
+	 */
+	public void Close() {
+		if (isClosed != true) {
+			try {
+				connection.close();
+				isClosed = true;
+			} catch (Exception e) {
+				e.getMessage();
+			}			
 		}
 	}
 }
