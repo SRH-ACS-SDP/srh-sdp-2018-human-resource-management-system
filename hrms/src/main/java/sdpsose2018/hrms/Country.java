@@ -1,12 +1,13 @@
 package sdpsose2018.hrms;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "countries")
 public class Country {
 
 	@Id
+	@Column(name = "country_id")
 	int id;
 	String name;
 	String language;
