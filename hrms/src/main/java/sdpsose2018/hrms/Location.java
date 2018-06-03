@@ -1,11 +1,24 @@
 package sdpsose2018.hrms;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "locations")
 public class Location {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "location_id")
 	int id;
+	
 	String name;
+	
 	String address;
+	
 	String details;
+	
+	@JoinColumn(name = "country_id")
+	@Column(name = "country_id")
 	int countryId;
 
 	public int getId() {

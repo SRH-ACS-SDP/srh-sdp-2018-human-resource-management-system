@@ -7,10 +7,14 @@ import javax.persistence.*;
 public class Country {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "country_id")
 	int id;
+	
 	String name;
+	
 	String language;
+	
 	String currency;
 	
 	public int getId() {

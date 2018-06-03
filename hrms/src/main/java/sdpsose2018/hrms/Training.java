@@ -1,14 +1,31 @@
 package sdpsose2018.hrms;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "trainings")
 public class Training {
 
+	@Id
+	@Column(name = "training_id")
 	int id;
-	String employeeId;
-	int courseId;
-	int conductorId;
-	double date;
-	String result;
 	
+	@JoinColumn(name = "employee_id")
+	@Column(name = "employee_id")
+	String employeeId;
+	
+	@JoinColumn(name = "course_id")
+	@Column(name = "course_id")
+	int courseId;
+	
+	@JoinColumn(name = "employee_id")
+	@Column(name = "conductor_id")
+	int conductorId;
+	
+	int date;
+	
+	String result;
+
 	public int getId() {
 		return id;
 	}
@@ -41,11 +58,11 @@ public class Training {
 		this.conductorId = conductorId;
 	}
 
-	public double getDate() {
+	public int getDate() {
 		return date;
 	}
 
-	public void setDate(double date) {
+	public void setDate(int date) {
 		this.date = date;
 	}
 

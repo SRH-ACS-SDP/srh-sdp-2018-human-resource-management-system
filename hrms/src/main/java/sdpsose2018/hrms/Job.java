@@ -1,12 +1,27 @@
 package sdpsose2018.hrms;
 
-public class Job {
+import javax.persistence.*;
 
+@Entity
+@Table(name = "jobs")
+public class Job {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "job_id")
 	int id;
+	
 	String title;
+	
 	String description;
+	
+	@Column(name = "min_salary")
 	double minSalary;
+	
+	@Column(name = "max_salary")
 	double maxSalary;
+	
+	@Column(name = "skills_required")
 	String skillsRequired;
 	
 	public int getId() {

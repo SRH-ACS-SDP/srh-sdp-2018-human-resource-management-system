@@ -1,11 +1,24 @@
 package sdpsose2018.hrms;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "performance_reviews")
 public class PerformanceReview {
 	
+	@JoinColumn(name = "employee_id")
+	@Column(name = "employee_id")
 	int employeeId;
+	
+	@JoinColumn(name = "employee_id")
+	@Column(name = "employee_id")
 	int reviewerId;
+	
 	String comment;
+	
 	int rating;
+	
+	int date; 
 	
 	public int getEmployeeId() {
 		return employeeId;
@@ -39,10 +52,18 @@ public class PerformanceReview {
 		this.rating = rating;
 	}
 
+	public int getDate() {
+		return date;
+	}
+
+	public void setDate(int date) {
+		this.date = date;
+	}
+
 	@Override
 	public String toString() {
 		return "PerformanceReview [employeeId=" + employeeId + ", reviewerId=" + reviewerId + ", comment=" + comment
-				+ ", rating=" + rating + "]";
+				+ ", rating=" + rating + ", date=" + date + "]";
 	}
 
 	public PerformanceReview() { }

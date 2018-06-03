@@ -1,15 +1,20 @@
-/**
- *
- */
 package sdpsose2018.hrms;
 
+import javax.persistence.*;
 
+@Entity
+@Table(name = "skills")
 public class Skill {
 	
-	 int id;
-	 String name;
-	 String description;
-	 int difficulty;
+	@Id
+	@Column(name = "skill_id")
+	int id;
+	
+	String name;
+	
+	String description;
+	
+	int difficulty;
 
 	public int getId() {
 		return id;

@@ -1,13 +1,35 @@
 package sdpsose2018.hrms;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "employees_jobs_assignments")
 public class EmployeeJobAssignment {
 
+	@JoinColumn(name = "employee_id")
+	@Column(name = "employee_id")
 	int employeeId;
+	
+	@JoinColumn(name = "job_id")
+	@Column(name = "job_id")
 	int jobId;
+	
+	@JoinColumn(name = "employee_id")
+	@Column(name = "supervisor_id")
 	int supervisorId;
-	double startDate;
-	double endDate;
+	
+	@JoinColumn(name = "department_id")
+	@Column(name = "department_id")
 	int departmentId;
+	
+	@Column(name = "start_date")
+	int startDate;
+	
+	@Column(name = "end_date")
+	int endDate;
+	
+	double salary;
+	
 	String description;
 
 	public int getEmployeeId() {
@@ -34,28 +56,36 @@ public class EmployeeJobAssignment {
 		this.supervisorId = supervisorId;
 	}
 
-	public double getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(double startDate) {
-		this.startDate = startDate;
-	}
-
-	public double getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(double endDate) {
-		this.endDate = endDate;
-	}
-
 	public int getDepartmentId() {
 		return departmentId;
 	}
 
 	public void setDepartmentId(int departmentId) {
 		this.departmentId = departmentId;
+	}
+
+	public int getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(int startDate) {
+		this.startDate = startDate;
+	}
+
+	public int getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(int endDate) {
+		this.endDate = endDate;
+	}
+
+	public double getSalary() {
+		return salary;
+	}
+
+	public void setSalary(double salary) {
+		this.salary = salary;
 	}
 
 	public String getDescription() {
@@ -69,8 +99,8 @@ public class EmployeeJobAssignment {
 	@Override
 	public String toString() {
 		return "EmployeeJobAssignment [employeeId=" + employeeId + ", jobId=" + jobId + ", supervisorId=" + supervisorId
-				+ ", startDate=" + startDate + ", endDate=" + endDate + ", departmentId=" + departmentId
-				+ ", description=" + description + "]";
+				+ ", departmentId=" + departmentId + ", startDate=" + startDate + ", endDate=" + endDate + ", salary="
+				+ salary + ", description=" + description + "]";
 	}
 
 	public EmployeeJobAssignment() { }

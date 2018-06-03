@@ -1,11 +1,24 @@
 package sdpsose2018.hrms;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name="departments")
 public class Department {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "department_id")
 	int id;
+	
 	String name;
+	
 	String address;
+	
 	String description;
+	
+	@JoinColumn(name = "location_id")
+	@Column(name = "location_id")
 	int locationId;
 	
 	public int getId() {
@@ -54,6 +67,6 @@ public class Department {
 				+ ", locationId=" + locationId + "]";
 	}
 
-	public Department(){ }
+	public Department() { }
 	
 }
