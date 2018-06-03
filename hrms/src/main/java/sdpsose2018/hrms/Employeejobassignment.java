@@ -2,7 +2,6 @@ package sdpsose2018.hrms;
 
 import javax.persistence.*;
 
-@Entity
 @Table(name = "employees_jobs_assignments")
 public class EmployeeJobAssignment {
 

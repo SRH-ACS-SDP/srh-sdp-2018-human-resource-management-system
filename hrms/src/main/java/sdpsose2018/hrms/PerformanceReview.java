@@ -2,7 +2,6 @@ package sdpsose2018.hrms;
 
 import javax.persistence.*;
 
-@Entity
 @Table(name = "performance_reviews")
 public class PerformanceReview {
 	

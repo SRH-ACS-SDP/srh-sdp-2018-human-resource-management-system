@@ -2,7 +2,7 @@ package sdpsose2018.hrms;
 
 import javax.persistence.*;
 
-@Entity
+@Table(name = "employees_dependables")
 public class EmployeeDependable {
 
 	@JoinColumn(name = "location_id")

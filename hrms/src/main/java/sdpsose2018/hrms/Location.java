@@ -7,7 +7,6 @@ import javax.persistence.*;
 public class Location {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "location_id")
 	int id;
 	
