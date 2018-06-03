@@ -54,6 +54,6 @@ public class Country {
 		return "Country [id=" + id + ", name=" + name + ", language=" + language + ", currency=" + currency + "]";
 	}
 
-	public Country(){ }
+	public Country() { }
 	
 }

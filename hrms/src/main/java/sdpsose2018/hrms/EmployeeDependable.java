@@ -37,6 +37,6 @@ public class EmployeeDependable {
 		return "EmployeeDependable [employeeId=" + employeeId + ", birthDate=" + birthDate + "]";
 	}
 
-	public EmployeeDependable(){ }
+	public EmployeeDependable() { }
 	
 }
