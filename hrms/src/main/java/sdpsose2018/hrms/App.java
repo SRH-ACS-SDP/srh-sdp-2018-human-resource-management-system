@@ -10,6 +10,7 @@ public class App
     {
     	ManageCourse MC = new ManageCourse();
     	//MC.addCourse();
-    	MC.viewCourse();
+    	//MC.viewCourse();
+
     }
 }
