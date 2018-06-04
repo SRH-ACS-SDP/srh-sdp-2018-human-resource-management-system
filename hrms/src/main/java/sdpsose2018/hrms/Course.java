@@ -2,8 +2,11 @@ package sdpsose2018.hrms;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Immutable;
+
 @Entity
 @Table(name = "courses")
+@Immutable
 public class Course {
 
 	@Id
@@ -70,13 +73,12 @@ public class Course {
 	public void setMentorSkills(String mentorSkills) {
 		this.mentorSkills = mentorSkills;
 	}
-
 	@Override
 	public String toString() {
 		return "Course [id=" + id + ", name=" + name + ", description=" + description + ", requiredSkills="
 				+ requiredSkills + ", acquiredSkills=" + acquiredSkills + ", mentorSkills=" + mentorSkills + "]";
 	}
-	
+
 	public Course() { }
-	
+
 }
