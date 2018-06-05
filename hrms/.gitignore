@@ -15,13 +15,11 @@
 log/
 target/
 
-<<<<<<< HEAD
 # Resources
 src/main/resources/META-INF/
 
 # Config
 config.xml
-=======
+
 #Other
 *.log
->>>>>>> added ManageTraining and updated .gitignore for log files
