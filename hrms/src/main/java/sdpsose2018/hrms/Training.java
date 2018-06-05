@@ -2,8 +2,11 @@ package sdpsose2018.hrms;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Immutable;
+
 @Entity
 @Table(name = "trainings")
+@Immutable
 public class Training {
 
 	@Id

@@ -16,7 +16,10 @@ log/
 target/
 
 # Resources
-src/main/resources/META-INF/
+src/main/resources/
 
 # Config
 config.xml
+
+#Other
+*.log
