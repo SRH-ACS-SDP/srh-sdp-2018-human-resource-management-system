@@ -1,14 +1,10 @@
 package sdpsose2018.hrms;
 
-<<<<<<< HEAD
-=======
 import java.util.Scanner;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
->>>>>>> added ManageTraining and updated .gitignore for log files
 /**
  * Hello world!
  *
@@ -17,12 +13,6 @@ public class App
 {
     public static void main( String[] args )
     {
-<<<<<<< HEAD
-    	ManageCourse MC = new ManageCourse();
-    	//MC.addCourse();
-    	//MC.viewCourse();
-
-=======
     	EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu");
     	EntityManager em = emf.createEntityManager();
     	
@@ -33,8 +23,5 @@ public class App
     	mt.addTraining();
     	//mc.addCourse();
     	//mc.viewCourse();
-    	
- 
->>>>>>> added ManageTraining and updated .gitignore for log files
     }
 }

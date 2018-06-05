@@ -13,7 +13,6 @@ public class Training {
 	@Column(name = "training_id")
 	int id;
 	
-<<<<<<< HEAD
 	@JoinColumn(name = "employee_id")
 	@Column(name = "employee_id")
 	String employeeId;
@@ -25,23 +24,6 @@ public class Training {
 	@JoinColumn(name = "employee_id")
 	@Column(name = "conductor_id")
 	int conductorId;
-=======
-	@JoinColumn(name = "EMPLOYEE_ID")
-	@Column(name = "EMPLOYEE_ID")
-	String employeeId;
-	
-	@JoinColumn(name = "COURSE_ID")
-	@Column(name = "COURSE_ID")
-	int courseId;
-	
-	@JoinColumn(name = "EMPLOYEE_ID")
-	@Column(name = "CONDUCTOR_ID")
-	int conductorId;
-	
-	int date;
-	
-	String result; 
->>>>>>> added ManageTraining and updated .gitignore for log files
 	
 	int date;
 	
