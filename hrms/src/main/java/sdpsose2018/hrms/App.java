@@ -18,12 +18,13 @@ public class App
     {
     	EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu");
     	EntityManager em = emf.createEntityManager();
-    	
     	Scanner sc = new Scanner(System.in);
     	
-    	DepartmentManager manager  = new DepartmentManager(em, sc);
-    	manager.call(em);
+    	EmployeeManager employeeManager = new EmployeeManager(em);
     	
-    	em.close();    			
+    	employeeManager.viewEmployees();
+    	
+    	sc.close();
+    	em.close();
     }
 }
