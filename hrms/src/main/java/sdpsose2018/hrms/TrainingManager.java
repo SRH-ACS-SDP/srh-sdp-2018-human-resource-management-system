@@ -13,13 +13,9 @@ public class TrainingManager {
 	int conductorId;
 	char c;
 	
-	
-	
 	public TrainingManager (EntityManager em, Scanner sc) {
 		this.entitymanager = em;
 		this.scanner = sc;
-		
-
 		trainig = em.createQuery("from Training", Training.class).getResultList();
 	}
 	
@@ -27,9 +23,7 @@ public class TrainingManager {
 		
 		Training tr = new Training();
 		CourseManager mc = new CourseManager(entitymanager, scanner);
-		
-		
-		//Add Course ID
+
 		
 		System.out.println("_____Adding a new Training_____\n");
 		System.out.print("Course ID: ");
@@ -45,7 +39,7 @@ public class TrainingManager {
 			System.out.println();
 			
 				if (c == 'y') {
-					courseId = validateCourseIdInput();//validate inputs contain with numbers only
+					courseId = validateCourseIdInput();
 					if (courseId == 0) {
 						return;
 					}
@@ -69,14 +63,15 @@ public class TrainingManager {
 			tr.setCourseId(courseId);
 			
 		}else {
-			/////////////need to validate random values without yes or no
+			////////////System.out.print("invalid input");
+			///////////user should be move again to-> System.out.print("Do you want to view Courses?(y/n) ");
 			
 		}
 
 		//Add Conductor ID
-				System.out.print("Conductor ID: ");
-				System.out.print("Are you going to conduct the Training(y/n) ");
-				c = scanner .nextLine().charAt(0);
+			System.out.print("Conductor ID: ");
+			System.out.print("Are you going to conduct the Training(y/n) ");
+			c = scanner .nextLine().charAt(0);
 				
 				if (c == 'y') {
 					
@@ -91,22 +86,21 @@ public class TrainingManager {
 					if (c == 'y') {
 						
 						//Call: ViewEmployee();
-						conductorId = validateConductorIdInput();//validate inputs contain with numbers only
+						conductorId = validateConductorIdInput();
 						if (conductorId == 0) {
 							return;
 						}
 						tr.setConductorId(conductorId);
 						
 					}else if (c == 'n') {
-						conductorId = validateConductorIdInput();//validate inputs contain with numbers only
+						conductorId = validateConductorIdInput();
 						if (conductorId == 0) {
 							return;
 						}
 						tr.setConductorId(conductorId);
 					
 				}else {
-					System.out.print("Enter valid input");
-					addTraining();
+					
 				}
 					
 				}
