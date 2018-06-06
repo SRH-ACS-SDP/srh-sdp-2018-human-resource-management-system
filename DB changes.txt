@@ -1,0 +1,4 @@
+@ Time stams should be long
+@ Table from courses ,coursename should be unique
+@Check all null able attributes (Trainig table ->date )
+ipconfig /flushdns
