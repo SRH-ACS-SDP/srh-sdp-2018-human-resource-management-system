@@ -85,23 +85,23 @@ public class TrainingManager {
 					tr.setConductorId(conductorId);
 					
 				}else if (c == 'n') {
-					conductorId = validateConductorIdInput();//validate inputs contain with numbers only
-					if (conductorId == 0) {
-						return;
-					}
 					System.out.print("Do you want to view employees?(y/n) ");
 					c = scanner .nextLine().charAt(0);
 					
 					if (c == 'y') {
 						
 						//Call: ViewEmployee();
-						System.out.print("Enter Conductor ID: ");
-						int conductorId = Integer.parseInt(scanner .nextLine());
+						conductorId = validateConductorIdInput();//validate inputs contain with numbers only
+						if (conductorId == 0) {
+							return;
+						}
 						tr.setConductorId(conductorId);
 						
 					}else if (c == 'n') {
-						System.out.print("Enter Conductor ID: ");
-						int conductorId = Integer.parseInt(scanner .nextLine());
+						conductorId = validateConductorIdInput();//validate inputs contain with numbers only
+						if (conductorId == 0) {
+							return;
+						}
 						tr.setConductorId(conductorId);
 					
 				}else {
@@ -169,6 +169,8 @@ public class TrainingManager {
 			int intConductorId = 0;
 			try {
 				intConductorId = Integer.parseInt(scanner.nextLine());
+				entitymanager.createQuery("from Course where id = '"+ conductorId +"'").getSingleResult();	
+				System.out.println("Course already exists in Database.");
 			} catch (NoResultException nre) {
 				isInputValid = true;
 				return intConductorId;
