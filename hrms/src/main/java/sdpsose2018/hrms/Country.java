@@ -17,6 +17,9 @@ public class Country {
 	
 	String currency;
 	
+	@Column(name = "tax_rate")
+	Double taxRate;
+	
 	public int getId() {
 		return id;
 	}
@@ -49,9 +52,18 @@ public class Country {
 		this.currency = currency;
 	}
 
+	public Double getTaxRate() {
+		return taxRate;
+	}
+
+	public void setTaxRate(Double taxRate) {
+		this.taxRate = taxRate;
+	}
+	
 	@Override
 	public String toString() {
-		return "Country [id=" + id + ", name=" + name + ", language=" + language + ", currency=" + currency + "]";
+		return "Country [id=" + id + ", name=" + name + ", language=" + language + ", currency=" + currency
+				+ ", taxRate=" + taxRate + "]";
 	}
 
 	public Country() { }
