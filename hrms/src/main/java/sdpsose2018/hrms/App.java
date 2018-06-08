@@ -20,8 +20,7 @@ public class App
     	EntityManager em = emf.createEntityManager();
     	Scanner sc = new Scanner(System.in);
     	
-    	EmployeeManager employeeManager = new EmployeeManager(em);
-    	
+    	EmployeeManager employeeManager = new EmployeeManager(em,sc);
     	employeeManager.viewEmployees();
     	
     	sc.close();
