@@ -4,6 +4,7 @@ import java.util.Scanner;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
+
 public class TrainingManager {
 
 	EntityManager entitymanager;
