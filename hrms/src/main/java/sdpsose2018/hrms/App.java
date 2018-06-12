@@ -6,9 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import org.hibernate.SessionFactory;
-
-import com.fasterxml.classmate.AnnotationConfiguration;
 /**
  * Hello world!
  *

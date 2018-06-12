@@ -79,13 +79,8 @@ public class CourseManager {
 	
 		entitymanager.getTransaction().begin();
 		entitymanager.persist(co);
+		System.out.println("Course has been added successfully");
 		entitymanager.getTransaction().commit();
-	
-		
-		
-		//Course dbObject = em.createQuery("from Course c where c.name='" + coursename + "'", Course.class).getSingleResult();
-		//Course dbObject = entitymanager.createQuery("from Course c where c.name='" + coursename + "'",Course.class).getSingleResult();
-		//System.out.println(dbObject);
 		
 		courses = entitymanager.createQuery("from Course", Course.class).getResultList();
 
@@ -115,92 +110,98 @@ public class CourseManager {
 		System.out.println(stringBuilder.toString());
 	}
 
-		public void updateCourse() {
+	
+	public void updateCourse() {
+		
+		try {
+			System.out.println("Enter course name ");
+			String name  = scanner.nextLine();
+			entitymanager.getTransaction().begin();
 			
-			try {
-				System.out.println("Enter course name ");
-				String name  = scanner.next();
-				Query query =entitymanager.createQuery("Select id from Course c where c.name LIKE :name");
-				query.setParameter("name", name);
-				
-				List id = query.getResultList();
-				entitymanager.getTransaction().begin();
-				Course c  = entitymanager.find(Course.class,id.get(0));
-				
-				//Now we need to update the code
-				
-				String name_old  = c.name;
-				String description_old  = c.description;
-				String requiredSkills_old   =  c.requiredSkills;
-				String acquiredSkills_old  = c.acquiredSkills;
-				String mentorSkills_old  = c.mentorSkills;
-				
-				updatable(name_old,description_old,requiredSkills_old,acquiredSkills_old,mentorSkills_old,c);
+			Query query =entitymanager.createQuery("Select id from Course c where c.name LIKE :name");
+			query.setParameter("name", name);
+			
+			List ids = query.getResultList();
+			for (Object object : ids) {
+				System.out.println("ID : "+object.toString());
+			}
+			
+			Course c  = entitymanager.find(Course.class,ids.get(0));
+			
+			String name_old  = c.name;
+			String description_old  = c.description;
+			String requiredSkills_old   =  c.requiredSkills;
+			String acquiredSkills_old  = c.acquiredSkills;
+			String mentorSkills_old  = c.mentorSkills;
+			
+			updateCourseFunc(name_old,description_old,requiredSkills_old,acquiredSkills_old,mentorSkills_old,c);
+			
+			System.out.println("Course has been updated successfully");
+			courses = entitymanager.createQuery("from Course", Course.class).getResultList();
+			
+			}catch(Exception e) {
+				e.printStackTrace();
+			}	
+	}
+	
+	private void updateCourseFunc(String name,String description,String requiredSkills,String acquiredSkills,String mentorSkills,Course co){
+		
+		int  count  =0;
+		System.out.println("Old Course name is " +name+ ".leave blank if you do not want to change the value ");
+		System.out.println("Enter the new Course name: ");
+		String new_name =  scanner.nextLine();
+		if (new_name.equals(" ")) {
+			co.setName(name);
+			count++;
+		}else {
+			co.setName(new_name);
+			count++;
+		}
+		
+		System.out.println("Old Description is " +description+ ".leave blank if you do not want to change the value ");
+		System.out.println("Enter the new Description: ");
+		String new_description=  scanner.nextLine();
+		if (new_description.equals(" ")) {
+			co.setDescription(description);
+		}else {
+			co.setDescription(new_description);
+		}
+		
+		System.out.println("Old Required Skill is " +requiredSkills+ ".leave blank if you do not want to change the value ");
+		System.out.println("Enter the new Required Skills: ");
+		String new_requiredSkills =  scanner.nextLine();
+		if (new_requiredSkills.equals(" ")) {
+			co.setRequiredSkills(requiredSkills);
+		}else {
+			co.setRequiredSkills(new_requiredSkills);
+		}
+		
+		System.out.println("Old Acquired Skill is " +acquiredSkills+ " .leave blank if you dont want to change the value ");
+		System.out.println("Enter the new Acquired Skills: ");
+		String new_acquiredSkills =  scanner.nextLine();
+		if (new_acquiredSkills.equals(" ")) {
+			co.setAcquiredSkills(acquiredSkills);
+		}else {
+			co.setAcquiredSkills(new_acquiredSkills);
+		}
+		
+		System.out.println("Old Mentor Skill is " +mentorSkills+ ".leave blank if you do not want to change the value ");
+		System.out.println("Enter the new Mentor Skills: ");
+		String new_mentorSkills =  scanner.nextLine();
+		if (new_mentorSkills.equals(" ")) {
+			co.setMentorSkills(mentorSkills);
+		}else {
+			co.setMentorSkills(new_mentorSkills);
+		}
+		
+		entitymanager.merge(co);
+		entitymanager.getTransaction().commit();
 
-				System.out.println("Successfully Updated");
-				entitymanager.getTransaction().commit();
-				courses = entitymanager.createQuery("from Course", Course.class).getResultList();
-				
-				}catch(Exception e) {
-					System.out.println("Error");
-				}
-			
-		}
-		
-		private static void updatable(String name,String description,String requiredSkills,String acquiredSkills,String mentorSkills,Course co){
-			
-			int  count  =0;
-			System.out.println("Please Enter the new Course name: ");
-			System.out.println("if you do not want to change the Course name either leave it blank or type no: ");
-			String new_name =  scanner.next();
-			if (new_name.equals(" ")|| new_name.toLowerCase().equals("no")) {
-				co.setName(name);
-				count++;
-			}else {
-				co.setName(new_name);
-				count++;
-			}
-			
-			System.out.println("Please Enter the new Description: ");
-			System.out.println("if you do not want to change the Description either leave it blank or type no: ");
-			String new_description=  scanner.next();
-			if (new_description.equals(" ")|| new_description.toLowerCase().equals("no")) {
-				co.setDescription(description);
-			}else {
-				co.setDescription(new_description);
-			}
-			
-			
-			System.out.println("Please Enter the new Required Skills: ");
-			System.out.println("if you do not want to change the Required Skills either leave it blank or type no: ");
-			String new_requiredSkills =  scanner.next();
-			if (new_requiredSkills.equals(" ") || new_requiredSkills.toLowerCase().equals("no")) {
-				co.setRequiredSkills(requiredSkills);
-			}else {
-				co.setRequiredSkills(new_requiredSkills);
-			}
-			
-			System.out.println("Please Enter the new Acquired Skills: ");
-			System.out.println("if you do not want to change the Acquired Skills either leave it blank or type no: ");
-			String new_acquiredSkills =  scanner.next();
-			if (new_acquiredSkills.equals(" ") || new_acquiredSkills.toLowerCase().equals("no")) {
-				co.setAcquiredSkills(acquiredSkills);
-			}else {
-				co.setAcquiredSkills(new_acquiredSkills);
-			}
-			
-			System.out.println("Please Enter the new Mentor Skills: ");
-			System.out.println("if you do not want to change the Mentor Skills either leave it blank or type no: ");
-			String new_mentorSkills =  scanner.next();
-			if (new_mentorSkills.equals(" ") || new_mentorSkills.toLowerCase().equals("no")) {
-				co.setMentorSkills(mentorSkills);
-			}else {
-				co.setAcquiredSkills(new_mentorSkills);
-			}
-			
-			
-		}
 		
 		
+	}
+	
+	
 }
+		
 
