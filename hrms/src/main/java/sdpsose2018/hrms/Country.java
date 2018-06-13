@@ -7,6 +7,7 @@ import javax.persistence.*;
 public class Country {
 
 	@Id
+	
 	@Column(name = "country_id")
 	int id;
 	
@@ -52,18 +53,18 @@ public class Country {
 		this.currency = currency;
 	}
 
-	public Double getTaxRate() {
+		public Double getTaxRate() {
 		return taxRate;
 	}
 
 	public void setTaxRate(Double taxRate) {
-		this.taxRate = taxRate;
+	this.taxRate = taxRate;
 	}
 	
 	@Override
 	public String toString() {
 		return "Country [id=" + id + ", name=" + name + ", language=" + language + ", currency=" + currency
-				+ ", taxRate=" + taxRate + "]";
+				+ ", taxRate=" + taxRate + " ]";
 	}
 
 	public Country() { }
