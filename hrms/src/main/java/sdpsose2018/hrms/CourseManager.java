@@ -10,6 +10,9 @@ public class CourseManager {
 	EntityManager entitymanager;
 	List<Course> courses;
 	static Scanner scanner;
+	char c;
+	String name;
+	int id;
 	
 	
 
@@ -20,6 +23,8 @@ public class CourseManager {
 		
 		courses = em.createQuery("from Course", Course.class).getResultList();
 	}
+	
+	//Add
 	
 	public void addCourse() {
 
@@ -40,7 +45,7 @@ public class CourseManager {
 			System.out.println("Course already exists in Database.");
     		boolean isRetry = true;
 			do {
-	    		System.out.print("Try again? (y/n) ");
+	    		System.out.print("Try again? (y/n): ");
 	    		switch(scanner.nextLine().charAt(0)) {
 	    		case 'n':
 	    			return;
@@ -79,19 +84,18 @@ public class CourseManager {
 	
 		entitymanager.getTransaction().begin();
 		entitymanager.persist(co);
-		System.out.println("Course has been added successfully");
+		System.out.println("Course has been added successfully!!!!");
 		entitymanager.getTransaction().commit();
 		
 		courses = entitymanager.createQuery("from Course", Course.class).getResultList();
-
 }
 	
-	//ViewCourseFunction
+	//View
 	
-	public void viewCourse() {
+	public void viewAllCourse() {
 		
 		StringBuilder stringBuilder = new StringBuilder();
-		System.out.println("_____View all available Courses_____");
+		System.out.println("\n_____View all available Courses_____");
 		stringBuilder.append(String.format("%142s\n", "").replace(' ', '_'));
 		stringBuilder.append(String.format("|%-10s|%-25s|%-25s|%-25s|%-25s|%-25s|\n", "COURSE ID","NAME", "DESCRIPTION", "REQUIRED SKILLS", "ACQUIRED SKILLS", "MENTOR SKILLS").replace(' ', '_'));
 		
@@ -109,24 +113,62 @@ public class CourseManager {
 		
 		System.out.println(stringBuilder.toString());
 	}
-
 	
-	public void updateCourse() {
+	public void viewSpecificCourse(int courseId) {
 		
+		StringBuilder stringBuilder = new StringBuilder();
+		System.out.println("\n_____View Course ID: " +courseId+ "_____");
+		stringBuilder.append(String.format("%142s\n", "").replace(' ', '_'));
+		stringBuilder.append(String.format("|%-10s|%-25s|%-25s|%-25s|%-25s|%-25s|\n", "COURSE ID","NAME", "DESCRIPTION", "REQUIRED SKILLS", "ACQUIRED SKILLS", "MENTOR SKILLS").replace(' ', '_'));
+		courses = entitymanager.createQuery("from Course where id = '"+courseId+"'", Course.class).getResultList();
+		
+		for (Course c : courses) {
+			
+			stringBuilder.append(String.format("|%10d|", c.getId()).replace(' ', '_'));
+			stringBuilder.append(String.format("%-25s|", c.getName()).replace(' ', '_'));
+			stringBuilder.append(String.format("%-25s|", c.getDescription()).replace(' ', '_'));
+			stringBuilder.append(String.format("%-25s|", c.getRequiredSkills()).replace(' ', '_'));
+			stringBuilder.append(String.format("%-25s|", c.getAcquiredSkills()).replace(' ', '_'));
+			stringBuilder.append(String.format("%-25s|", c.getMentorSkills()).replace(' ', '_'));
+
+			stringBuilder.append("\n");
+		}
+		
+		System.out.println(stringBuilder.toString());
+	}
+
+	//Update
+	
+	public void updateSpecificCourse(int courseId) {
+		
+		boolean is_valid  =  true;
 		try {
-			System.out.println("Enter course name ");
-			String name  = scanner.nextLine();
-			entitymanager.getTransaction().begin();
+			System.out.println("\n_____Updating_a_Course_:"+courseId+"_____\n");
+			do {
+			System.out.print("Do you want to view the Course " +courseId+ " ?(y/n): ");
+			c = scanner .nextLine().charAt(0);
 			
-			Query query =entitymanager.createQuery("Select id from Course c where c.name LIKE :name");
-			query.setParameter("name", name);
-			
-			List ids = query.getResultList();
-			for (Object object : ids) {
-				System.out.println("ID : "+object.toString());
+			if (TrainingManager.validateViewCourseInput(c)) {
+				is_valid  =  false;
+									
+				if (c == 'y') {
+						viewSpecificCourse(courseId);
+						Query query =entitymanager.createQuery("Select id from Course c where c.id LIKE :id");
+						query.setParameter("id", id);
+						
+						
+				}else if (c == 'n') {
+						Query query =entitymanager.createQuery("Select id from Course c where c.id LIKE :id");
+						query.setParameter("id", id);
+							
+				}
+			}else {
+				System.out.println("Invalid Input!!!");
+				System.out.println();
 			}
+			}while(is_valid);
 			
-			Course c  = entitymanager.find(Course.class,ids.get(0));
+			Course c  = entitymanager.find(Course.class,courseId);
 			
 			String name_old  = c.name;
 			String description_old  = c.description;
@@ -136,7 +178,8 @@ public class CourseManager {
 			
 			updateCourseFunc(name_old,description_old,requiredSkills_old,acquiredSkills_old,mentorSkills_old,c);
 			
-			System.out.println("Course has been updated successfully");
+			System.out.println("\nCourse has been updated successfully!!!!");
+			System.out.print("______________________________________________________________");
 			courses = entitymanager.createQuery("from Course", Course.class).getResultList();
 			
 			}catch(Exception e) {
@@ -147,10 +190,10 @@ public class CourseManager {
 	private void updateCourseFunc(String name,String description,String requiredSkills,String acquiredSkills,String mentorSkills,Course co){
 		
 		int  count  =0;
-		System.out.println("Old Course name is " +name+ ".leave blank if you do not want to change the value ");
-		System.out.println("Enter the new Course name: ");
+		System.out.println("\nCourse name is " +name+ " (leave blank if you do not want to change the value)");
+		System.out.print("Enter the new Course name: ");
 		String new_name =  scanner.nextLine();
-		if (new_name.equals(" ")) {
+		if (new_name.equals("")) {
 			co.setName(name);
 			count++;
 		}else {
@@ -158,49 +201,45 @@ public class CourseManager {
 			count++;
 		}
 		
-		System.out.println("Old Description is " +description+ ".leave blank if you do not want to change the value ");
-		System.out.println("Enter the new Description: ");
+		System.out.println("\nDescription is " +description+ " (leave blank if you do not want to change the value)");
+		System.out.print("Enter the new Description: ");
 		String new_description=  scanner.nextLine();
-		if (new_description.equals(" ")) {
+		if (new_description.equals("")) {
 			co.setDescription(description);
 		}else {
 			co.setDescription(new_description);
 		}
 		
-		System.out.println("Old Required Skill is " +requiredSkills+ ".leave blank if you do not want to change the value ");
-		System.out.println("Enter the new Required Skills: ");
+		System.out.println("\nRequired Skill is " +requiredSkills+ " (leave blank if you do not want to change the value)");
+		System.out.print("Enter the new Required Skills: ");
 		String new_requiredSkills =  scanner.nextLine();
-		if (new_requiredSkills.equals(" ")) {
+		if (new_requiredSkills.equals("")) {
 			co.setRequiredSkills(requiredSkills);
 		}else {
 			co.setRequiredSkills(new_requiredSkills);
 		}
 		
-		System.out.println("Old Acquired Skill is " +acquiredSkills+ " .leave blank if you dont want to change the value ");
-		System.out.println("Enter the new Acquired Skills: ");
+		System.out.println("\nAcquired Skill is " +acquiredSkills+ " (leave blank if you do not want to change the value)");
+		System.out.print("Enter the new Acquired Skills: ");
 		String new_acquiredSkills =  scanner.nextLine();
-		if (new_acquiredSkills.equals(" ")) {
+		if (new_acquiredSkills.equals("")) {
 			co.setAcquiredSkills(acquiredSkills);
 		}else {
 			co.setAcquiredSkills(new_acquiredSkills);
 		}
 		
-		System.out.println("Old Mentor Skill is " +mentorSkills+ ".leave blank if you do not want to change the value ");
-		System.out.println("Enter the new Mentor Skills: ");
+		System.out.println("\nMentor Skill is " +mentorSkills+ " (leave blank if you do not want to change the value)");
+		System.out.print("Enter the new Mentor Skills: ");
 		String new_mentorSkills =  scanner.nextLine();
-		if (new_mentorSkills.equals(" ")) {
+		if (new_mentorSkills.equals("")) {
 			co.setMentorSkills(mentorSkills);
 		}else {
 			co.setMentorSkills(new_mentorSkills);
 		}
 		
-		entitymanager.merge(co);
-		entitymanager.getTransaction().commit();
-
-		
-		
 	}
 	
+
 	
 }
 		

@@ -1,7 +1,6 @@
 package sdpsose2018.hrms;
 
 import java.util.Scanner;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;

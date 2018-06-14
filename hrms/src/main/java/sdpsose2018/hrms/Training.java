@@ -6,7 +6,6 @@ import org.hibernate.annotations.Immutable;
 
 @Entity
 @Table(name = "trainings")
-@Immutable
 public class Training {
 
 	@Id
