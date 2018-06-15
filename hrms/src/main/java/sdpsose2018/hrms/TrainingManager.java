@@ -1,54 +1,53 @@
 package sdpsose2018.hrms;
-import java.io.BufferedReader;
 import java.util.List;
 import java.util.Scanner;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
-
 public class TrainingManager {
 
-	EntityManager entitymanager;
+	EntityManager em;
 	List<Training> trainigs;
-	Scanner scanner;
+	Scanner sc;
 	int courseId;
 	int conductorId;
 	char c;
 	int id;
-	static BufferedReader br ;
+	List<Integer> ids;
+	
 	
 	public TrainingManager (EntityManager em, Scanner sc) {
-		this.entitymanager = em;
-		this.scanner = sc;
+		this.em = em;
+		this.sc = sc;
 		trainigs = em.createQuery("from Training", Training.class).getResultList();
+		
 	}
 	
 	public void addTraining() {
-		
+		CourseManager mc = new CourseManager(em, sc);
 		Training tr = new Training();
-		CourseManager mc = new CourseManager(entitymanager, scanner);
-
+		
 		boolean is_valid  =  true;
 		
 		System.out.println("_____Adding a new Training_____\n");
 		
 		do {
 		System.out.print("Course ID: ");
-		System.out.print("Do you want to view All Courses?(y/n) ");
-		c = scanner .nextLine().charAt(0);
+		System.out.print("Do you want to view All Courses?(y/n): ");
+		c = sc .nextLine().charAt(0);
 		
 		if (validateViewCourseInput(c)) {
 			is_valid  =  false;
 			if (c == 'y') {
-			mc.viewAllCourse();
+				mc.viewAllCourse();
 			do {
-			System.out.println("Course is exist? (y/n)");
-			c = scanner .nextLine().charAt(0);
+				System.out.print("Course is exist? (y/n): ");
+				c = sc .nextLine().charAt(0);
 			
-			is_valid  =  true;
+				is_valid  =  true;
 			if (validateViewCourseInput(c)) {
-			is_valid  =  false;
+				is_valid  =  false;
 			
 				if (c == 'y') {
 					courseId = validateCourseIsExistInput();
@@ -81,7 +80,7 @@ public class TrainingManager {
 		}else {
 			System.out.println("Invalid Input!");
 			System.out.println();
-			}
+		}
 		}while(is_valid);
 		
 		//Add Conductor ID
@@ -89,7 +88,7 @@ public class TrainingManager {
 		do {
 			System.out.print("Conductor ID: ");
 			System.out.print("Are you going to conduct the Training(y/n)? ");
-			c = scanner .nextLine().charAt(0);
+			c = sc .nextLine().charAt(0);
 			is_valid  =  true;
 			
 			if (validateViewCourseInput(c)) {
@@ -97,24 +96,24 @@ public class TrainingManager {
 					
 					if (c == 'y') {
 						System.out.print("Enter your ID: ");
-						int conductorId = Integer.parseInt(scanner .nextLine());
+						int conductorId = Integer.parseInt(sc .nextLine());
 						tr.setConductorId(conductorId);
 						
 					}else if (c == 'n') {
 						System.out.print("Do you want to view employees?(y/n) ");
-						c = scanner .nextLine().charAt(0);
+						c = sc .nextLine().charAt(0);
 						
 						if (c == 'y') {
 							
 							//Call: ViewEmployee();
-							conductorId = validateCourseIsExistInput();
+							conductorId = validateConductorIdInput();
 							if (conductorId == 0) {
 								return;
 							}
 							tr.setConductorId(conductorId);
 							
 						}else if (c == 'n') {
-							conductorId = validateCourseIsExistInput();
+							conductorId = validateConductorIdInput();
 							if (conductorId == 0) {
 								return;
 							}
@@ -128,11 +127,13 @@ public class TrainingManager {
 			}
 		}while(is_valid);
 				
-				entitymanager.getTransaction().begin();
-				entitymanager.persist(tr);
-				entitymanager.getTransaction().commit();
+				em.getTransaction().begin();
+				em.persist(tr);
+				em.getTransaction().commit();
 		
-		System.out.print("Added a Record Successfully!!!!!!!");
+		System.out.print("\nAdded a Record Successfully!!!!!!!");
+		System.out.println("______________________________________________________________");
+		whatNext();
 		
 	}
 	
@@ -160,14 +161,14 @@ public class TrainingManager {
 	
 	public void updateTraining() {
 		
-		entitymanager.getTransaction().begin();
+		em.getTransaction().begin();
 		
 		boolean is_valid  =  true;
 		try {
 			System.out.println("_____Updating a Training_____\n");
 			do {
 				System.out.print("Do you want to view Trainings?(y/n) ");
-				c = scanner .nextLine().charAt(0);
+				c = sc .nextLine().charAt(0);
 				if (validateViewCourseInput(c)) {
 					is_valid  =  false;
 					
@@ -175,8 +176,8 @@ public class TrainingManager {
 						viewTraining();
 						do{
 							System.out.print("Enter Training ID: ");
-							id  = scanner.nextInt();
-							Query query =entitymanager.createQuery("Select id from Training c where c.id LIKE :id");
+							id  = Integer.parseInt(sc.nextLine());
+							Query query =em.createQuery("Select id from Training c where c.id = :id");
 							query.setParameter("id", id);
 							List ids = query.getResultList();
 							if(ids.size() != 0 ){
@@ -190,8 +191,8 @@ public class TrainingManager {
 					}else if (c == 'n') {
 						do{
 							System.out.print("\nEnter Training ID: ");
-							id  = scanner.nextInt();
-							Query query =entitymanager.createQuery("Select id from Training c where c.id LIKE :id");
+							id  = Integer.parseInt(sc.nextLine());
+							Query query =em.createQuery("Select id from Training c where c.id = :id");
 							query.setParameter("id", id);
 							List ids = query.getResultList();
 							if(ids.size() != 0 ){
@@ -208,10 +209,10 @@ public class TrainingManager {
 				}
 			}while(is_valid);
 		
-			Query query =entitymanager.createQuery("Select id from Training c where c.id LIKE :id");
+			Query query =em.createQuery("Select id from Training c where c.id = :id");
 			query.setParameter("id", id);
 			List ids = query.getResultList();
-			Training t  = entitymanager.find(Training.class,ids.get(0));
+			Training t  = em.find(Training.class,ids.get(0));
 			
 			String employeeId_old  = t.employeeId;
 			int courseId_old  = t.courseId;
@@ -222,7 +223,9 @@ public class TrainingManager {
 			updateTrainingFunc(employeeId_old,courseId_old,conductorId_old,date_old,result_old,t);
 			
 			System.out.println("\nTraining has been updated successfully!!!!");
-			trainigs = entitymanager.createQuery("from Training", Training.class).getResultList();
+			System.out.println("______________________________________________________________");
+			trainigs = em.createQuery("from Training", Training.class).getResultList();
+			whatNext();
 			
 			}catch(Exception e) {
 				e.printStackTrace();
@@ -232,13 +235,12 @@ public class TrainingManager {
 		
 	private void updateTrainingFunc(String employeeId_old,int courseId_old,int conductorId_old,int date_old,String result_old,Training tr) {
 		
-		CourseManager mc = new CourseManager(entitymanager, scanner);
+		CourseManager mc = new CourseManager(em, sc);
 
 		int  count  =0;
-		System.out.println("\nEmployee ID is " +employeeId_old+ " (leave blank if you do not want to change the value)");
+		System.out.println("\nEmployee ID is " +employeeId_old+ " (Nothing to update -> Please leave blank.)");
 		System.out.print("Enter new Employee ID: ");
-		scanner.nextLine();
-		String employeeId_new =  scanner.nextLine();
+		String employeeId_new =  sc.nextLine();
 		if (employeeId_new.equals("")) {
 			tr.setEmployeeId(employeeId_old);
 			count++;
@@ -252,7 +254,7 @@ public class TrainingManager {
 		System.out.println("\nCourse ID is " +courseId_old);
 		do {
 		System.out.print("Do you want to Edit the Course " +courseId_old+ " ?(y/n)");
-		c = scanner .nextLine().charAt(0);
+		c = sc .nextLine().charAt(0);
 		
 		if (validateViewCourseInput(c)) {
 			is_valid  =  false;
@@ -261,13 +263,13 @@ public class TrainingManager {
 				mc.updateSpecificCourse(courseId_old);
 			}else if (c == 'n') {
 				System.out.print("Do you want to view All Courses?(y/n)");
-				c = scanner .nextLine().charAt(0);
+				c = sc .nextLine().charAt(0);
 		
 				if (c == 'y') {
 					mc.viewAllCourse();
-					System.out.println("(leave blank if you do not want to change the value)");
+					System.out.println("(Nothing to update -> Please leave blank.)");
 					System.out.print("Enter new Course ID: ");
-					String CourseId_new = scanner.nextLine();
+					String CourseId_new = sc.nextLine();
 						if (CourseId_new.equals("")) {
 							tr.setCourseId(courseId_old);
 						}else {
@@ -275,9 +277,9 @@ public class TrainingManager {
 						}
 			
 				}else if(c == 'n') {
-					System.out.println("(leave blank if you do not want to change the value)");
+					System.out.println("\n(Nothing to update -> Please leave blank.)");
 					System.out.print("Enter new Course ID: ");
-					String CourseId_new = scanner.nextLine();
+					String CourseId_new = sc.nextLine();
 						if (CourseId_new.equals("")) {
 							tr.setCourseId(courseId_old);
 						}else {
@@ -291,38 +293,108 @@ public class TrainingManager {
 		}
 		}while(is_valid);
 		
-		System.out.println("\nConductor ID is " +conductorId_old+ " (leave blank if you do not want to change the value)");
+		System.out.println("\nConductor ID is " +conductorId_old+ " (Nothing to update -> Please leave blank.)");
 		System.out.print("Enter new Conductor ID:  ");
-		String conductorId_new =  scanner.nextLine();
+		String conductorId_new =  sc.nextLine();
 		if (conductorId_new.equals("")) {
 			tr.setConductorId(conductorId_old);
 		}else {
 			tr.setConductorId(Integer.parseInt(conductorId_new));
 		}
 		
-		
-		System.out.println("\nDate is " +date_old+ " (leave blank if you do not want to change the value)");
+		System.out.println("\nDate is " +date_old+ " (Nothing to update -> Please leave blank.)");
 		System.out.print("Enter new Date:  ");
-		String date_new =  scanner.nextLine();
+		String date_new =  sc.nextLine();
 		if (date_new.equals("")) {
 			tr.setDate(date_old);
 		}else {
 			tr.setDate(Integer.parseInt(date_new));
 		}
 		
-		System.out.println("\nResult is " +result_old+ " (leave blank if you do not want to change the value)");
+		System.out.println("\nResult is " +result_old+ " (Nothing to update -> Please leave blank.)");
 		System.out.print("Enter new Result:  ");
-		String result_new =  scanner.nextLine();
+		String result_new =  sc.nextLine();
 		if (result_new.equals("")) {
 			tr.setResult(result_old);
 		}else {
 			tr.setResult(result_new);
 		}
 		
-		entitymanager.merge(tr);
-		entitymanager.getTransaction().commit();
+		em.merge(tr);
+		em.getTransaction().commit();
 		
 		}
+	
+	public void deleteTraining() {
+		
+		CourseManager mc = new CourseManager(em, sc);
+		boolean is_valid = true;
+		
+			System.out.println("_____Deleting a Training_____\n");
+		do {
+			System.out.print("Do you want to view Trainings?(y/n): ");
+				c = sc .nextLine().charAt(0);
+				if (validateViewCourseInput(c)) {
+					is_valid  =  false;
+			
+				if (c == 'y') {
+					viewTraining();
+					do {
+						System.out.print("Enter Training ID: ");
+						try {
+						id  = Integer.parseInt(sc.nextLine());
+						Query query =em.createQuery("Select id from Training c where c.id = :id");
+						query.setParameter("id", id);
+						List ids = query.getResultList();
+						if(ids.size() != 0 ){
+							is_valid = false;
+						}else{
+							System.out.println("Please enter a valid Training ID");
+							is_valid = true;
+						}
+						}catch (NumberFormatException nfe) {
+				        	System.out.println("Please enter a valid Training ID");
+				        	is_valid = true;
+						}
+					}while(is_valid);
+				
+				}else if (c == 'n') {
+					do {
+						System.out.print("Enter Training ID: ");
+						try {
+						id  = Integer.parseInt(sc.nextLine());
+						Query query =em.createQuery("Select id from Training c where c.id = :id");
+						query.setParameter("id", id);
+						List ids = query.getResultList();
+						if(ids.size() != 0 ){
+							is_valid = false;
+						}else{
+							System.out.println("Please enter a valid Training ID");
+							is_valid = true;
+						}
+						}catch (NumberFormatException nfe) {
+				        	System.out.println("Please enter a valid Training ID");
+				        	is_valid = true;
+						}
+					}while(is_valid);
+				}
+				Training t  = em.find(Training.class,id);
+
+				em.getTransaction().begin();
+				em.remove(t);
+				em.getTransaction().commit();
+				System.out.println("\nTraining has been deleted!!!!");
+				System.out.println("______________________________________________________________");
+			}else {
+					System.out.println("Invalid Input!");
+					System.out.println();
+			}
+				
+		}while(is_valid);
+	}
+
+		
+
 		
 	////Validation
 	public int validateCourseIsExistInput() {
@@ -332,8 +404,8 @@ public class TrainingManager {
 			System.out.print("Enter Course ID: ");
 			int intCourseId = 0;
 			try {
-				intCourseId = Integer.parseInt(scanner.nextLine());
-				entitymanager.createQuery("from Course where id = '"+ courseId +"'").getSingleResult();	
+				intCourseId = Integer.parseInt(sc.nextLine());
+				em.createQuery("from Course where id = '"+ courseId +"'").getSingleResult();	
 				System.out.println("Course already exists in Database.");
 			} catch (NoResultException nre) {
 				isInputValid = true;
@@ -344,7 +416,7 @@ public class TrainingManager {
 				boolean isRetry = false;
 				do {
 					System.out.print("Try again? (y/n) ");
-					switch (scanner.nextLine().charAt(0)) {
+					switch (sc.nextLine().charAt(0)) {
 					case 'y':
 						isRetry = true;
 						continue;
@@ -355,13 +427,13 @@ public class TrainingManager {
 						isRetry = false;
 						break;
 					}					
-				} while (!isRetry);
+				}while (!isRetry);
 			}
 			catch (Exception e) {
 				System.out.println(e.getMessage());
 				isInputValid = false;
 			}
-		} while (!isInputValid);
+		}while (!isInputValid);
 		
 		return 0;
 		
@@ -375,8 +447,8 @@ public class TrainingManager {
 			System.out.print("Enter Conductor ID: ");
 			int intConductorId = 0;
 			try {
-				intConductorId = Integer.parseInt(scanner.nextLine());
-				entitymanager.createQuery("from Course where id = '"+ conductorId +"'").getSingleResult();	
+				intConductorId = Integer.parseInt(sc.nextLine());
+				em.createQuery("from Course where id = '"+ conductorId +"'").getSingleResult();	
 				System.out.println("Course already exists in Database.");
 			} catch (NoResultException nre) {
 				isInputValid = true;
@@ -387,7 +459,7 @@ public class TrainingManager {
 				boolean isRetry = false;
 				do {
 					System.out.print("Try again? (y/n) ");
-					switch (scanner.nextLine().charAt(0)) {
+					switch (sc.nextLine().charAt(0)) {
 					case 'y':
 						isRetry = true;
 						continue;
@@ -422,6 +494,88 @@ public class TrainingManager {
 		}
 	}
 	
+	public void menuForTrainingManager()
+	{
+		CourseManager mc = new CourseManager(em, sc);
+		boolean is_valid  =  true;
+		int number = 0;
+	
+		System.out.println("\n_____Training_Module_____\n");
+	do {
+		System.out.println("1. New Training ");
+		System.out.println("2. Edit Training ");
+		System.out.println("3. View Training ");
+		System.out.println("4. Delete Training ");
+		try {
+			System.out.print("=>");
+			number  =  Integer.parseInt(sc.nextLine());
+		
+			switch(number) {
+		
+				case 1 :addTraining();
+						is_valid = false;
+						break;
+			
+				case 2 :updateTraining();
+						is_valid = false;
+						break;
+						
+				case 3 :viewTraining();
+						is_valid = false;
+						break;
+		
+				case 4 : System.out.print("\nDo you need to Delete a Training?(y/n): ");
+						char c = sc.nextLine().charAt(0);
+							if (c == 'y') {
+								deleteTraining();
+								whatNext();
+							}else {
+								mc.deleteCourse();
+								whatNext();
+							}
+						is_valid = false;
+						break;
+		
+				default: System.out.println("Invalid Number. Try again ! ");
+						is_valid = true;
+			}	
+		}catch (Exception e) {
+			
+			System.out.println("Invalid Number. Try again ! ");
+			is_valid = true;
+		}
+		}while(is_valid);
+
+	}
+
+	public void whatNext(){
+		
+		boolean is_valid  =  true;
+
+		do {
+			try {
+				System.out.print("\nDo you want to goto the Training Manager Menu ? (y/n):");
+				char c = sc.nextLine().charAt(0);
+		
+					if(c == 'y') {
+						menuForTrainingManager();
+						is_valid = false;
+					}
+					else if(c == 'n') {
+						System.out.println("Thank you");
+						is_valid = false;
+					}else {
+						System.out.println("Invalid Entry. Try again ! ");
+						is_valid = true;
+					}
+			}catch(Exception e){
+				System.out.println("Invalid Entry. Try again ! ");
+				is_valid = true;
+			}
+	}while(is_valid);
+	}
+		
 	
 }
+	
 
