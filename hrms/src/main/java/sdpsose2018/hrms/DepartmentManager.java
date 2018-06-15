@@ -235,7 +235,7 @@ public class DepartmentManager {
 		do {
 		System.out.println("Please Enter the New Name. if you do not want to Change the Name either leave it blank or type no ");
 		System.out.print("=>");
-		String new_name =  r.readLine().toLowerCase();
+		String new_name =  r.readLine();
 		if (ischeckChar(new_name) ==true) {
 		if (new_name.equals(" ")|| new_name.equals("no")|| new_name.equals("")) {
 			
@@ -253,7 +253,7 @@ public class DepartmentManager {
 		do {
 		System.out.println("Please Enter the New Language. if you do not want to Change the Language either leave it blank or type no ");
 		System.out.print("=>");
-		String new_language=  r.readLine().toLowerCase();
+		String new_language=  r.readLine();
 		if(ischeckChar(new_language)==true) {
 		if (new_language.equals(" ")|| new_language.equals("no") || new_language.equals("")) {
 			
