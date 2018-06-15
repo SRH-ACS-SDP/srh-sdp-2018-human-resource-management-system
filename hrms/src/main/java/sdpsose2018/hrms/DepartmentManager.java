@@ -22,10 +22,9 @@ public class DepartmentManager {
 	List<Location> location;
 	List<Department> departments;
 	public static String d_name ="";
-	static BufferedReader r ;
 	
 	EntityManager em;
-	static Scanner sc;
+	Scanner sc;
 	
 	@SuppressWarnings("unchecked")
 	
@@ -37,10 +36,9 @@ public class DepartmentManager {
 		location  =  em.createQuery("from Location",Location.class).getResultList();
 		departments  = em.createQuery("from Department",Department.class).getResultList();
 		
-		r = new BufferedReader(new InputStreamReader(System.in));
 	}
 	
-	public void addCountry() throws IOException {
+	public void addCountry() {
 		Country co = new Country();
 		
 		boolean invalidInput = true;
@@ -50,7 +48,7 @@ public class DepartmentManager {
 			System.out.println("Add Country Details");
 			System.out.print("Country Name: ");
 			System.out.print("=>");
-			name = sc.next();
+			name = sc.nextLine();
 			if(ischeckChar(name)==true) {
 			co.setName(name);
 	    	try {
@@ -87,7 +85,7 @@ public class DepartmentManager {
 		do {
 		System.out.print("Country Language: ");
 		System.out.print("=>");
-		String language = r.readLine();
+		String language = sc.nextLine();
 		if(ischeckChar(language)==false) {
 			System.out.println("Enter Only Strings");
 		}else {
@@ -101,7 +99,7 @@ public class DepartmentManager {
 		
 		System.out.print("Country Currency: like [USD,EUR,INR,RUS] etc ");
 		System.out.print("=>");
-		String currency = r.readLine();	
+		String currency = sc.nextLine();	
 		
 		if(currency.length() >3 || ischeckChar(currency)==false) {
 			System.out.println("Invalid input ");
@@ -123,7 +121,7 @@ public class DepartmentManager {
 			
 		System.out.println("Enter Tax Rate");
 		System.out.print("=>");
-		String  tax  =  r.readLine();
+		String  tax  =  sc.nextLine();
 		co.setTaxRate(Double.parseDouble(tax));
 		
 		em.getTransaction().begin();
@@ -200,7 +198,7 @@ public class DepartmentManager {
 			
 		System.out.println("Enter Country Name ");
 		System.out.print("=>");
-		String name  = sc.next();
+		String name  = sc.nextLine();
 		Query query =em.createQuery("Select id from Country c where c.name LIKE :name");
 		query.setParameter("name", name);
 		
@@ -229,31 +227,58 @@ public class DepartmentManager {
 		
 	}
 	
-	private static  void updatable(String name,String language,String currency,double tax,Country co) throws IOException
+	private void updatable(String name,String language,String currency,double tax,Country co)
 	{
-		boolean is_valid  =  true;
+		boolean is_valid  =  false;
 		do {
-		System.out.println("Please Enter the New Name. if you do not want to Change the Name either leave it blank or type no ");
-		System.out.print("=>");
-		String new_name =  r.readLine();
-		if (ischeckChar(new_name) ==true) {
-		if (new_name.equals(" ")|| new_name.equals("no")|| new_name.equals("")) {
+			System.out.println("Please Enter the New Name. if you do not want to Change the Name either leave it blank or type no ");
+			System.out.print("=>");
+			String new_name =  sc.nextLine();
+			if (ischeckChar(new_name) == true)
+			{
+				if (new_name.equals(" ")|| new_name.equals("no")|| new_name.equals(""))
+				{
+					co.setName(name);
+					is_valid = true;
+				}else {
+					try {
+			    		em.createQuery("from Country where name = '" + new_name + "'").getSingleResult();    		
+			    		System.out.println("Country Already exists in Database.");
+			    		boolean isRetry = true;
+			    		do {
+				    		System.out.print("Try Again.? (y/n) ");
+				    		System.out.print("=>");
+				    		switch(sc.nextLine().charAt(0)) {
+				    		case 'n':
+				    			return;
+				    		case 'y':
+				    			isRetry = true;
+				    			break;
+				    		default:
+				    			isRetry = false;
+				    			break;
+				    			}
+			    		} while(!isRetry);
+			    		
+			    	} catch (NoResultException nre) {
+			    		co.setName(new_name);
+			    		is_valid = true;
+			    	} catch (Exception e){
+			    		System.out.println(e.getMessage());
+			    		is_valid  = false;
+			    	}
+				}
+			}else {
+				System.out.println("Invalid Input!");
+			}
+		} while(!is_valid);
 			
-			co.setName(name);
-			is_valid = false;
-		}else {
-			co.setName(new_name);
-			is_valid  = false;
-		}
-		}else {
-			System.out.println("Invalid Input!");
-		}}while(is_valid);
 		
 		boolean is_valid_ =true;
 		do {
 		System.out.println("Please Enter the New Language. if you do not want to Change the Language either leave it blank or type no ");
 		System.out.print("=>");
-		String new_language=  r.readLine();
+		String new_language=  sc.nextLine();
 		if(ischeckChar(new_language)==true) {
 		if (new_language.equals(" ")|| new_language.equals("no") || new_language.equals("")) {
 			
@@ -272,8 +297,8 @@ public class DepartmentManager {
 		do {
 		System.out.println("Please Enter the New Currency. if you do not want to Change the Currency either leave it blank or type no ");
 		System.out.print("=>");
-		String new_curreny =  r.readLine().toLowerCase();
-		if (new_curreny.length() < 3 || ischeckChar(new_curreny)==true) {
+		String new_curreny =  sc.nextLine();
+		if (new_curreny.length() <= 3 && ischeckChar(new_curreny)==true) {
 		if (new_curreny.equals(" ") || new_curreny.equals("no") || new_curreny.equals("")) {
 			
 			co.setCurrency(currency);
@@ -289,9 +314,10 @@ public class DepartmentManager {
 		
 		boolean  is_valid__input  =  true;
 		do {
+			
 		System.out.println("Please Enter the New Tax Rate. if you do not want to Change the Tax Rate either leave it blank or type no ");
 		System.out.print("=>");
-		String Tax_rate =  r.readLine().toLowerCase();
+		String Tax_rate = sc.nextLine().toLowerCase();
 		try {
 			
 		if (Tax_rate.equals(" ") || Tax_rate.equals("no") || Tax_rate.equals("")) {
@@ -345,7 +371,7 @@ public class DepartmentManager {
 	}
 
 	
-	public void country(EntityManager em) throws IOException {
+	public void country(EntityManager em) {
 
     
     	System.out.println("Choose the Field that you want to see, Please Enter the Number only ");
@@ -355,7 +381,7 @@ public class DepartmentManager {
     	System.out.println("4. Delete ");
     	System.out.print("=>");
     	
-    	String  result  =r.readLine();
+    	String  result  = sc.nextLine();
     	
     	switch(Integer.parseInt(result) ){
     		
@@ -392,7 +418,7 @@ public class DepartmentManager {
 	}
 	
 
-	public void ask_what(EntityManager em) throws IOException
+	public void ask_what(EntityManager em)
 	{
 		
 		System.out.println("Please Enter the Number in which you want to do Transaction by looking in the option");
@@ -400,7 +426,7 @@ public class DepartmentManager {
 		System.out.println("2. Location ");
 		System.out.println("3. Department ");
 		System.out.print("=>");
-		int number  =  sc.nextInt();
+		int number  =  Integer.parseInt(sc.nextLine());
 		
 		switch(number) {
 		
@@ -413,7 +439,8 @@ public class DepartmentManager {
 		
 		
 	}
-	public void call(EntityManager em) throws IOException {
+	public void call(EntityManager em)
+	{
 		
     	ask_what(em);
     	
@@ -421,7 +448,7 @@ public class DepartmentManager {
 		do {
     		System.out.println("Do you want to see the Changes in this Table or Go back to Main Menu ? Enter yes or no");
     		System.out.print("=>");
-        	answer  = r.readLine();
+        	answer  = sc.nextLine();
     
         	if(answer.toLowerCase().equals("yes")) {
         if (DepartmentManager.d_name.equals("Country")) {		

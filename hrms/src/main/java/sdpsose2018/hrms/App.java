@@ -14,10 +14,7 @@ import javax.persistence.Persistence;
 public class App 
 {
 	
-	
-	
-	
-    public static void main( String[] args ) throws IOException
+    public static void main( String[] args )
     {
     	EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu");
     	EntityManager em = emf.createEntityManager();
@@ -27,17 +24,6 @@ public class App
     	DepartmentManager manager  = new DepartmentManager(em, sc);
     	manager.call(em);
     	
-    	
-    	em.close();
-    	
-    	
-    	
-    			
+    	em.close();    			
     }
-    
-    	
-    	
-    	
-    }
-
-
+}
