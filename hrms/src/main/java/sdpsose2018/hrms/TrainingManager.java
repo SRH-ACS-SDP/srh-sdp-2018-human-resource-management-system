@@ -1,6 +1,12 @@
 package sdpsose2018.hrms;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -21,7 +27,6 @@ public class TrainingManager {
 		this.em = em;
 		this.sc = sc;
 		trainigs = em.createQuery("from Training", Training.class).getResultList();
-		
 	}
 	
 	public void addTraining() {
@@ -90,7 +95,6 @@ public class TrainingManager {
 			System.out.print("Are you going to conduct the Training(y/n)? ");
 			c = sc .nextLine().charAt(0);
 			is_valid  =  true;
-			
 			if (validateViewCourseInput(c)) {
 				is_valid  =  false;
 					
@@ -130,9 +134,8 @@ public class TrainingManager {
 				em.getTransaction().begin();
 				em.persist(tr);
 				em.getTransaction().commit();
-		
-		System.out.print("\nAdded a Record Successfully!!!!!!!");
-		System.out.println("______________________________________________________________");
+		System.out.println("\nAdded a Record Successfully!!!!!!!");
+		System.out.print("______________________________________________________________");
 		whatNext();
 		
 	}
@@ -147,15 +150,29 @@ public class TrainingManager {
 		for (Training t : trainigs) {
 			
 			stringBuilder.append(String.format("|%16d|", t.getId()).replace(' ', '_'));
-			stringBuilder.append(String.format("%-25s|", t.getEmployeeId()).replace(' ', '_'));
+			if(t.getEmployeeId() != null) {
+				stringBuilder.append(String.format("%-25s|", t.getEmployeeId()).replace(' ', '_'));
+			} else {
+				stringBuilder.append(String.format("%-25s|", "".replace(' ', '_')));
+			}
+				
 			stringBuilder.append(String.format("%-25s|", t.getCourseId()).replace(' ', '_'));
 			stringBuilder.append(String.format("%-25s|", t.getConductorId()).replace(' ', '_'));
-			stringBuilder.append(String.format("%-25s|", t.getDate()).replace(' ', '_'));
-			stringBuilder.append(String.format("%-25s|", t.getResult()).replace(' ', '_'));
+			if(t.getEmployeeId() != null) {
+				stringBuilder.append(String.format("%-25s|", new SimpleDateFormat("yyyy.MM.dd").format(t.getDate())).replace(' ', '_'));
+			} else {
+				stringBuilder.append(String.format("%-25s|","".replace(' ', '_')));
+			}
+			
+			if(t.getEmployeeId() != null) {
+				stringBuilder.append(String.format("%-25s|", t.getResult()).replace(' ', '_'));
+			} else {
+				stringBuilder.append(String.format("%-25s|","".replace(' ', '_')));
+			}
+			
 
 			stringBuilder.append("\n");
 		}
-		
 		System.out.println(stringBuilder.toString());
 	}
 	
@@ -217,11 +234,10 @@ public class TrainingManager {
 			String employeeId_old  = t.employeeId;
 			int courseId_old  = t.courseId;
 			int conductorId_old   =  t.conductorId;
-			int date_old  = t.date;
+			Date date_old  = t.date;
 			String result_old  = t.result;
 			
 			updateTrainingFunc(employeeId_old,courseId_old,conductorId_old,date_old,result_old,t);
-			
 			System.out.println("\nTraining has been updated successfully!!!!");
 			System.out.println("______________________________________________________________");
 			trainigs = em.createQuery("from Training", Training.class).getResultList();
@@ -233,24 +249,20 @@ public class TrainingManager {
 	}
 		
 		
-	private void updateTrainingFunc(String employeeId_old,int courseId_old,int conductorId_old,int date_old,String result_old,Training tr) {
+	private void updateTrainingFunc(String employeeId_old,int courseId_old,int conductorId_old,Date date_old,String result_old,Training tr) {
 		
 		CourseManager mc = new CourseManager(em, sc);
 
-		int  count  =0;
 		System.out.println("\nEmployee ID is " +employeeId_old+ " (Nothing to update -> Please leave blank.)");
 		System.out.print("Enter new Employee ID: ");
 		String employeeId_new =  sc.nextLine();
 		if (employeeId_new.equals("")) {
 			tr.setEmployeeId(employeeId_old);
-			count++;
 		}else {
 			tr.setEmployeeId(employeeId_new);
-			count++;
 		}
 		
 		boolean is_valid  =  true;
-		
 		System.out.println("\nCourse ID is " +courseId_old);
 		do {
 		System.out.print("Do you want to Edit the Course " +courseId_old+ " ?(y/n)");
@@ -302,14 +314,30 @@ public class TrainingManager {
 			tr.setConductorId(Integer.parseInt(conductorId_new));
 		}
 		
-		System.out.println("\nDate is " +date_old+ " (Nothing to update -> Please leave blank.)");
-		System.out.print("Enter new Date:  ");
-		String date_new =  sc.nextLine();
-		if (date_new.equals("")) {
-			tr.setDate(date_old);
-		}else {
-			tr.setDate(Integer.parseInt(date_new));
-		}
+		boolean isDateValid = false;
+		do {
+			System.out.println("\nDate is " + date_old + " (Nothing to update -> Please leave blank.)");
+			System.out.print("Enter new Date (YYYY.MM.DD):  ");
+			String date_new_string =  sc.nextLine();
+			
+			if(!date_new_string.equals("")) {
+				Pattern pattern = Pattern.compile("[1-9][0-9]*.(1[0-2]|0[1-9]).(0[1-9]|(1|2)[0-9]|3[0-1])");
+				Matcher matcher = pattern.matcher(date_new_string);
+			
+				isDateValid = matcher.matches();
+			
+				DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+				Date date;
+				try {
+					date = dateFormat.parse(date_new_string);
+					tr.setDate(date);
+					isDateValid = true;
+				} catch (Exception e) {
+					System.out.println(e.getMessage());
+					isDateValid = false;
+				}
+			}
+		} while (!isDateValid);
 		
 		System.out.println("\nResult is " +result_old+ " (Nothing to update -> Please leave blank.)");
 		System.out.print("Enter new Result:  ");
@@ -318,18 +346,14 @@ public class TrainingManager {
 			tr.setResult(result_old);
 		}else {
 			tr.setResult(result_new);
-		}
-		
+		}		
 		em.merge(tr);
 		em.getTransaction().commit();
-		
-		}
+}
 	
 	public void deleteTraining() {
 		
-		CourseManager mc = new CourseManager(em, sc);
 		boolean is_valid = true;
-		
 			System.out.println("_____Deleting a Training_____\n");
 		do {
 			System.out.print("Do you want to view Trainings?(y/n): ");
@@ -337,49 +361,48 @@ public class TrainingManager {
 				if (validateViewCourseInput(c)) {
 					is_valid  =  false;
 			
-				if (c == 'y') {
+			if (c == 'y') {
 					viewTraining();
-					do {
-						System.out.print("Enter Training ID: ");
-						try {
+				do {
+						System.out.print("\nEnter Training ID :");
+					try {
 						id  = Integer.parseInt(sc.nextLine());
 						Query query =em.createQuery("Select id from Training c where c.id = :id");
 						query.setParameter("id", id);
 						List ids = query.getResultList();
-						if(ids.size() != 0 ){
-							is_valid = false;
-						}else{
-							System.out.println("Please enter a valid Training ID");
-							is_valid = true;
-						}
+							if(ids.size() != 0 ){
+								is_valid = false;
+								}else{
+									System.out.println("Please enter a valid Training ID");
+									is_valid = true;
+								}
 						}catch (NumberFormatException nfe) {
-				        	System.out.println("Please enter a valid Training ID");
-				        	is_valid = true;
+								System.out.println("Please enter a valid Training ID");
+								is_valid = true;
 						}
 					}while(is_valid);
 				
-				}else if (c == 'n') {
-					do {
-						System.out.print("Enter Training ID: ");
-						try {
+			}else if (c == 'n') {
+				do {
+						System.out.print("\nEnter Training ID: ");
+					try {
 						id  = Integer.parseInt(sc.nextLine());
 						Query query =em.createQuery("Select id from Training c where c.id = :id");
 						query.setParameter("id", id);
 						List ids = query.getResultList();
-						if(ids.size() != 0 ){
-							is_valid = false;
-						}else{
-							System.out.println("Please enter a valid Training ID");
-							is_valid = true;
-						}
-						}catch (NumberFormatException nfe) {
+							if(ids.size() != 0 ){
+								is_valid = false;
+							}else{
+								System.out.println("Please enter a valid Training ID");
+								is_valid = true;
+							}
+					}catch (NumberFormatException nfe) {
 				        	System.out.println("Please enter a valid Training ID");
 				        	is_valid = true;
-						}
-					}while(is_valid);
-				}
+					}
+				}while(is_valid);
+			}
 				Training t  = em.find(Training.class,id);
-
 				em.getTransaction().begin();
 				em.remove(t);
 				em.getTransaction().commit();
@@ -389,7 +412,6 @@ public class TrainingManager {
 					System.out.println("Invalid Input!");
 					System.out.println();
 			}
-				
 		}while(is_valid);
 	}
 
@@ -434,12 +456,9 @@ public class TrainingManager {
 				isInputValid = false;
 			}
 		}while (!isInputValid);
-		
-		return 0;
-		
+		return 0;		
 	}
 
-	
 	public int validateConductorIdInput() {
 		
 		boolean isInputValid = false;
@@ -471,21 +490,19 @@ public class TrainingManager {
 						break;
 					}					
 				} while (!isRetry);
-			}
-			catch (Exception e) {
+				
+			}catch (Exception e) {
 				System.out.println(e.getMessage());
 				isInputValid = false;
 			}
 		} while (!isInputValid);
 		
 		return 0;
-		
 	}
 	
 	public static boolean validateViewCourseInput(char ch) {
 		
-		boolean  flag  = false;
-		
+	boolean  flag  = false;
 		if(ch == 'y' || ch == 'n') {
 			flag  =  true;
 			return flag;
@@ -507,7 +524,7 @@ public class TrainingManager {
 		System.out.println("3. View Training ");
 		System.out.println("4. Delete Training ");
 		try {
-			System.out.print("=>");
+			System.out.print("Input ->");
 			number  =  Integer.parseInt(sc.nextLine());
 		
 			switch(number) {
@@ -540,18 +557,15 @@ public class TrainingManager {
 						is_valid = true;
 			}	
 		}catch (Exception e) {
-			
 			System.out.println("Invalid Number. Try again ! ");
 			is_valid = true;
 		}
 		}while(is_valid);
-
 	}
 
 	public void whatNext(){
 		
 		boolean is_valid  =  true;
-
 		do {
 			try {
 				System.out.print("\nDo you want to goto the Training Manager Menu ? (y/n):");

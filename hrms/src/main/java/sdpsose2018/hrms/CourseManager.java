@@ -9,6 +9,7 @@ public class CourseManager {
 
 	EntityManager em;
 	List<Course> courses;
+	List<Training> trainigs;
 	static Scanner sc;
 	char c;
 	String name;
@@ -19,8 +20,6 @@ public class CourseManager {
 	public CourseManager(EntityManager em, Scanner sc) {
 		this.em = em;
 		this.sc = sc;
-		
-		
 		courses = em.createQuery("from Course", Course.class).getResultList();
 	}
 	
@@ -85,7 +84,6 @@ public class CourseManager {
 		em.persist(co);
 		System.out.println("Course has been added successfully!!!!");
 		em.getTransaction().commit();
-		
 		courses = em.createQuery("from Course", Course.class).getResultList();
 }
 	
@@ -109,7 +107,6 @@ public class CourseManager {
 
 			stringBuilder.append("\n");
 		}
-		
 		System.out.println(stringBuilder.toString());
 	}
 	
@@ -132,7 +129,6 @@ public class CourseManager {
 
 			stringBuilder.append("\n");
 		}
-		
 		System.out.println(stringBuilder.toString());
 	}
 
@@ -146,7 +142,6 @@ public class CourseManager {
 			do {
 			System.out.print("Do you want to view the Course " +courseId+ " ?(y/n): ");
 			c = sc .nextLine().charAt(0);
-			
 			if (TrainingManager.validateViewCourseInput(c)) {
 				is_valid  =  false;
 									
@@ -175,7 +170,6 @@ public class CourseManager {
 			String mentorSkills_old  = c.mentorSkills;
 			
 			updateCourseFunc(name_old,description_old,requiredSkills_old,acquiredSkills_old,mentorSkills_old,c);
-			
 			System.out.println("\nCourse has been updated successfully!!!!");
 			System.out.println("______________________________________________________________");
 			courses = em.createQuery("from Course", Course.class).getResultList();
@@ -234,52 +228,78 @@ public class CourseManager {
 		}else {
 			co.setMentorSkills(new_mentorSkills);
 		}
-		
-	}
+}
 	
 	public void deleteCourse() {
 		
-			
-		try {
+		boolean is_valid = true;
 			System.out.println("\n_____Deleting_a_Course_:_____\n");
-			System.out.print("Do you want to view Courses ?(y/n): ");
-			c = sc.next().charAt(0);
+			do {
+				System.out.print("Do you want to view Courses ?(y/n): ");
+				c = sc.nextLine().charAt(0);
+					if (TrainingManager.validateViewCourseInput(c)) {
+						is_valid  =  false;
 			
 			if (c == 'y') {
 				viewAllCourse();
-				System.out.print("Enter Course ID: ");
-				int id = sc.nextInt();
-					Course c = em.find(Course.class, id );	
-					
-					try {
-						em.getTransaction().begin();
-						em.remove(c);
-						em.getTransaction().commit();
-						System.out.println("\nCourse has been deleted successfully!!!!");
-						System.out.println("______________________________________________________________");
-					} catch (Exception e) {
-						System.out.println("\nThis course has been linked with another Training");
-						System.out.println("Course Delete not Successfull!!!!");
+			do {
+				System.out.print("\nEnter Course ID: ");
+				try {
+					id = Integer.parseInt(sc.nextLine());
+					Query query =em.createQuery("Select id from Course c where c.id = :id");
+					query.setParameter("id", id);
+					List ids = query.getResultList();
+						if(ids.size() != 0 ){
+							is_valid = false;
+							}else{
+								System.out.println("Please enter a valid Training ID");
+								is_valid = true;
+							}
+					}catch (NumberFormatException nfe) {
+							System.out.println("Please enter a valid Training ID");
+							is_valid = true;
 					}
+			}while(is_valid);
+				
 			}else if (c == 'n') {
-				System.out.print("Enter Course ID: ");
-				int id = sc.nextInt();
-					Course c = em.find(Course.class, id );	
-					
-					try {
-						em.getTransaction().begin();
-						em.remove(c);
-						em.getTransaction().commit();
-						System.out.println("\nCourse has been deleted successfully!!!!");
-						System.out.println("______________________________________________________________");
-					} catch (Exception e) {
-						System.out.println("\nThis course has been linked with another Training");
-						System.out.println("Course Delete not Successfull!!!!");
+				
+			do {
+				System.out.print("\nEnter Course ID: ");
+				try {				
+					id = Integer.parseInt(sc.nextLine());
+					Query query =em.createQuery("Select id from Course c where c.id = :id");
+					query.setParameter("id", id);
+					List ids = query.getResultList();
+						if(ids.size() != 0 ){
+							is_valid = false;
+							}else{
+								System.out.println("Please enter a valid Training ID");
+								is_valid = true;
+							}
+					}catch (NumberFormatException nfe) {
+							System.out.println("Please enter a valid Training ID");
+							is_valid = true;
 					}
+			}while(is_valid);
 			}
-		}catch(Exception e ){
-			e.printStackTrace();
+			
+			Course c = em.find(Course.class, id );	
+			try {
+				em.getTransaction().begin();
+				em.remove(c);
+				em.getTransaction().commit();
+				System.out.println("\nCourse has been deleted successfully!!!!");
+				System.out.println("______________________________________________________________");
+			} catch (Exception e) {
+				System.out.println("\nThis course has been linked with a Training");
+				System.out.println("Course Delete not Successfull!!!!");
+			}
+		
+		}else {
+			System.out.println("Invalid Input!");
+			System.out.println();
 		}
+		}while(is_valid);
 		
 	
 }
