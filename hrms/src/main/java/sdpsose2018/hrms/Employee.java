@@ -1,5 +1,7 @@
 package sdpsose2018.hrms;
 
+import java.util.Date;
+
 import javax.persistence.*;
 
 @Entity
@@ -20,16 +22,16 @@ public class Employee {
 	Gender gender;
 	
 	@Column(name = "date_of_birth")
-	int dateOfBirth;
+	Date dateOfBirth;
 	
 	@Column(name = "date_joined")
-	int dateJoined;
+	Date dateJoined;
 	
 	@Column(name = "date_left")
-	int dateLeft;
+	Date dateLeft;
 	
 	@Column(name = "phone_number")
-	int phoneNumber;
+	String phoneNumber;
 	
 	@Column(name = "e_mail")
 	String eMail;

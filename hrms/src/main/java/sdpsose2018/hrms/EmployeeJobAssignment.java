@@ -1,5 +1,7 @@
 package sdpsose2018.hrms;
 
+import java.util.Date;
+
 import javax.persistence.*;
 
 @Table(name = "employees_jobs_assignments")
@@ -22,10 +24,10 @@ public class EmployeeJobAssignment {
 	int departmentId;
 	
 	@Column(name = "start_date")
-	int startDate;
+	Date startDate;
 	
 	@Column(name = "end_date")
-	int endDate;
+	Date endDate;
 	
 	double salary;
 	
@@ -62,23 +64,7 @@ public class EmployeeJobAssignment {
 	public void setDepartmentId(int departmentId) {
 		this.departmentId = departmentId;
 	}
-
-	public int getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(int startDate) {
-		this.startDate = startDate;
-	}
-
-	public int getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(int endDate) {
-		this.endDate = endDate;
-	}
-
+	
 	public double getSalary() {
 		return salary;
 	}
