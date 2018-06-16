@@ -1,5 +1,7 @@
 package sdpsose2018.hrms;
 
+import java.util.Date;
+
 import javax.persistence.*;
 
 @Entity
@@ -20,16 +22,16 @@ public class Employee {
 	Gender gender;
 	
 	@Column(name = "date_of_birth")
-	int dateOfBirth;
+	Date dateOfBirth;
 	
 	@Column(name = "date_joined")
-	int dateJoined;
+	Date dateJoined;
 	
 	@Column(name = "date_left")
-	int dateLeft;
+	Date dateLeft;
 	
 	@Column(name = "phone_number")
-	int phoneNumber;
+	String phoneNumber;
 	
 	@Column(name = "e_mail")
 	String eMail;
@@ -73,35 +75,35 @@ public class Employee {
 		this.gender = gender;
 	}
 
-	public int getDateOfBirth() {
+	public Date getDateOfBirth() {
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(int dateOfBirth) {
+	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 
-	public int getDateJoined() {
+	public Date getDateJoined() {
 		return dateJoined;
 	}
 
-	public void setDateJoined(int dateJoined) {
+	public void setDateJoined(Date dateJoined) {
 		this.dateJoined = dateJoined;
 	}
 
-	public int getDateLeft() {
+	public Date getDateLeft() {
 		return dateLeft;
 	}
 
-	public void setDateLeft(int dateLeft) {
+	public void setDateLeft(Date dateLeft) {
 		this.dateLeft = dateLeft;
 	}
 
-	public int getPhoneNumber() {
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 
-	public void setPhoneNumber(int phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 
@@ -139,7 +141,7 @@ public class Employee {
 
 	public Employee() { }
 	
-	public enum Gender { Male,Female }
+	public enum Gender { Male,Female,Unisex }
 	
 	public enum MaritalStatus { Single, Married, Divorced, Widowed }
 }

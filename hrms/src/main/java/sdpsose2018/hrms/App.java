@@ -1,6 +1,5 @@
 package sdpsose2018.hrms;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 import javax.persistence.EntityManager;
@@ -17,13 +16,40 @@ public class App
     public static void main( String[] args )
     {
     	EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu");
-    	EntityManager em = emf.createEntityManager();
-    	Scanner sc = new Scanner(System.in);
+    	EntityManager entityManager = emf.createEntityManager();
+    	Scanner scanner = new Scanner(System.in);
+    	EmployeeManager employeeManager = new EmployeeManager(entityManager,scanner);
     	
-    	EmployeeManager employeeManager = new EmployeeManager(em,sc);
-    	employeeManager.viewEmployees();
+    	boolean isDone = false;
+    	do{
+    		System.out.println("Welcome to your personal Human Resource Management System.");
+    		System.out.println("Please enter the number of one option below to continue.");
+    		System.out.println("1.) Go to the Employee-Management-Module.");
+			System.out.println("2.) Exit the application.");
+			
+			try {
+				int input = Integer.parseInt(scanner.nextLine());
+				switch(input) {
+				case 1:
+					employeeManager.start();
+					break;
+				case 2:
+					System.out.println("Thanks for using this Human Resource Management System.");
+					System.out.println("Bye.");
+					scanner.nextLine();
+					isDone = true;
+					break;
+				default:
+					System.out.println("Input is invalid.");
+					break;
+				}
+				
+			} catch (NumberFormatException nfe) {
+				System.out.println("Input must be a natural number below " + Integer.MAX_VALUE + ".");
+			}
+    	} while(!isDone);
     	
-    	sc.close();
-    	em.close();
+		entityManager.close();
+    	scanner.close();
     }
 }
