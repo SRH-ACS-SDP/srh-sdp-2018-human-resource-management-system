@@ -50,11 +50,9 @@ public class PayRollManager {
 		c = em.find(Country.class, l.countryId);
 		double netSalary;
 		
-		//System.out.println("Employee ID: " + e.id );
-		//System.out.println("Employee Full Name: " + e.firstName + " " + e.lastName);
+		
 		System.out.println("\n\n====================PAY-ROLL-MANAGER====================");
-		/*System.out.println("enter the Employee ID: ");
-		String name =sc.nextLine();*/
+		
 		if(e.gender==Gender.Male) {
 			
 		System.out.println("\nEmployee Full Name:\t" +"MR "+ e.firstName + " " + e.lastName);
@@ -74,82 +72,11 @@ public class PayRollManager {
 		netSalary = eja.salary - ((eja.salary*c.getTaxRate() / 100));
 		System.out.println("Net Salary:\t\t" + netSalary + " EUR");
 	
-		
-	/*	System.out.println("enter the Employee ID: ");
-		int id = Integer.parseInt(sc.nextLine());
-		Query query  = em.createQuery("Select id from Employee e where e.id LIKE :id");
-		query.setParameter("id", id);
-		List<Integer> ids   = query.getResultList();
-		String employeeName = e.firstName;
-		System.out.println(employeeName);
-		
-		Query query1  = em.createQuery("Select id from Department d where d.id LIKE :id");
-		query1.setParameter("id", id);
-		List ids1   = query1.getResultList();
-		String department = d.name;
-		System.out.println(department);
-		
-		Query query2  = em.createQuery("Select salary from EmployeeJobAssignment eja where eja.salary LIKE :salary");
-		query2.setParameter("id", id);
-		List ids2   = query2.getResultList();
-		EmployeeJobAssignment eja1 = em.find(EmployeeJobAssignment.class, ids2.get(0));
-		double salary = eja.salary;
-		System.out.println(salary);*/
-		
-		/*
-		Query departmentIds = em.createNativeQuery("SELECT id FROM employees_jobs_assignments WHERE employee_id = " + id);
-		query.setParameter("id", id);
-		List<Integer> countryids   = query.getResultList();
-		int departmentIds = e.;*/
-		
-		//System.out.println("enter CountryId: ");
-		int countryId = Integer.parseInt (sc.nextLine());
-		//query.setParameter("id", countryId);
-	//	List<Integer> countryids   = query.getResultList();
-		
-		
-		
 		Query jobIds  = em.createQuery("Select id from Country c where c.id LIKE :countryId");
 		System.out.println("enter Salary: ");
 		
-		
-		
-		
-		
-		
-		//netSalary = grossSalary - ((grossSalary*taxrate) / 100);
-		
-		//System.out.println(netSalary);
-		
-		//System.out.println(Enter);
 		return;
 		
 		
-		/*
-        PayRoll data = new PayRoll();
- 
-        System.out.println("Enter Employee name: ");
-        data.setName(sc.nextLine());
- 
-        System.out.println("Number of Hours Worked: ");
-        data.setHoursWorked(Double.parseDouble(sc.nextLine()));
- 
-        System.out.println("Hourly Pay Rate: ");
-        data.setHourlyPayRate(Double.parseDouble(sc.nextLine()));
- 
-        double grossAmount = data.grossPay(data.getHourlyPayRate(), data.getHoursWorked());
- 
-        System.out.println();
-        System.out.println("------------------------------------");
-        System.out.println("Name: " + data.getName());
-        System.out.println("Hours Worked: " + data.getHoursWorked() + "hrs");
-        System.out.println("Pay Rate: $" + data.getHourlyPayRate());
-        System.out.println("Gross Pay: $" + grossAmount + '\n');
-        System.out.println("DEDUCTIONS");
-        System.out.println("Federal Tax Withholding (20%): $" + data.federalTax(grossAmount));
-        System.out.println("State Tax Withholding (9%): $" + data.stateTax(grossAmount));
-        System.out.println("Total Deductions: $" + (data.federalTax(grossAmount) + data.stateTax(grossAmount)));
-        System.out.println("Net Pay: $" + (grossAmount - (data.federalTax(grossAmount) + data.stateTax(grossAmount))));
- 		*/
-    }
+		    }
 }
