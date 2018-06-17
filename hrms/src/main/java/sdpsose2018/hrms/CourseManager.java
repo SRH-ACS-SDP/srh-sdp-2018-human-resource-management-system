@@ -2,22 +2,21 @@ package sdpsose2018.hrms;
 import java.util.List;
 import java.util.Scanner;
 import javax.persistence.Query;
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 public class CourseManager {
 
-	EntityManager em;
+	DatabaseConnection em;
 	List<Course> courses;
 	List<Training> trainigs;
-	static Scanner sc;
+	Scanner sc;
 	char c;
 	String name;
 	int id;
 	
 	
 
-	public CourseManager(EntityManager em, Scanner sc) {
+	public CourseManager(DatabaseConnection em, Scanner sc) {
 		this.em = em;
 		this.sc = sc;
 		courses = em.createQuery("from Course", Course.class).getResultList();
@@ -84,11 +83,7 @@ public class CourseManager {
 		String RS = sc.nextLine();
 		co.setRequiredSkills(RS);
 	
-		em.getTransaction().begin();
 		em.persist(co);
-		em.flush();
-		em.clear();
-		em.getTransaction().commit();
 		fetchCourse();
 		System.out.println("Course has been added successfully!!!!");
 }
@@ -273,10 +268,8 @@ public class CourseManager {
 					}
 			}while(is_valid);
 			}
-				Course c = em.find(Course.class, id );	
-				em.getTransaction().begin();
+				Course c = em.find(Course.class, id );
 				em.remove(c);
-				em.getTransaction().commit();
 				fetchCourse();
 				System.out.println("\nCourse has been deleted successfully!!!!");
 				System.out.print("______________________________________________________________");

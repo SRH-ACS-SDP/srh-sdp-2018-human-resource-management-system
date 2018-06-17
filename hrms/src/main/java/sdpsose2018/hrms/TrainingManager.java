@@ -7,13 +7,12 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 public class TrainingManager {
 
-	EntityManager em;
+	DatabaseConnection em;
 	List<Training> trainigs;
 	Scanner sc;
 	int courseId;
@@ -23,7 +22,7 @@ public class TrainingManager {
 	List<Integer> ids;
 	
 	
-	public TrainingManager (EntityManager em, Scanner sc) {
+	public TrainingManager (DatabaseConnection em, Scanner sc) {
 		this.em = em;
 		this.sc = sc;
 	}
@@ -137,11 +136,7 @@ public class TrainingManager {
 			}
 		}while(is_valid);
 				
-				em.getTransaction().begin();
 				em.persist(tr);
-				em.flush();
-				em.clear();
-				em.getTransaction().commit();
 				fetchTraining();
 		System.out.println("\nAdded a Record Successfully!!!!!!!");
 		System.out.print("______________________________________________________________");
@@ -187,9 +182,6 @@ public class TrainingManager {
 	}
 	
 	public void updateTraining() {
-		
-		em.getTransaction().begin();
-		
 		boolean is_valid  =  true;
 		try {
 			System.out.println("_____Updating a Training_____\n");
@@ -353,7 +345,6 @@ public class TrainingManager {
 		}
 		
 		em.merge(tr);
-		em.getTransaction().commit();
 		fetchTraining();
 }
 	
@@ -409,9 +400,7 @@ public class TrainingManager {
 				}while(is_valid);
 			}
 				Training t  = em.find(Training.class,id);
-				em.getTransaction().begin();
 				em.remove(t);
-				em.getTransaction().commit();
 				fetchTraining();
 				System.out.println("\nTraining has been deleted!!!!");
 				System.out.print("______________________________________________________________");

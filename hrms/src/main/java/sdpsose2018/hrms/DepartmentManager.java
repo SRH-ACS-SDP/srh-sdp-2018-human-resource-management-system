@@ -4,14 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-
-
-
-
 
 public class DepartmentManager {
 
@@ -20,14 +15,14 @@ public class DepartmentManager {
 	List<Department> departments;
 	public static String d_name ="";
 	
-	EntityManager em;
+	DatabaseConnection em;
 
      Scanner sc;
 	
 	
 	
 
-	public DepartmentManager(EntityManager em, Scanner sc) {
+	public DepartmentManager(DatabaseConnection em, Scanner sc) {
 		this.em = em;
 		this.sc = sc;
 		
@@ -123,11 +118,7 @@ public class DepartmentManager {
 		String  tax  =  sc.nextLine();
 		co.setTaxRate(Double.parseDouble(tax));
 		
-		em.getTransaction().begin();
 		em.persist(co);
-		em.flush();
-		em.clear();
-		em.getTransaction().commit();
 	
 		Country dbObject = em.createQuery("from Country c where c.name='" + name + "'",Country.class).getSingleResult();
 		
@@ -202,7 +193,6 @@ public class DepartmentManager {
 		query.setParameter("name", name);
 		
 		List id  = query.getResultList();
-		em.getTransaction().begin();
 		
 		Country c  = em.find(Country.class,id.get(0));
 		
@@ -215,9 +205,6 @@ public class DepartmentManager {
 		
 		updatable(name_old,language_old,currency_old,text_old,c);
 		System.out.println("Successfully updated");
-		em.flush();
-		em.clear();
-		em.getTransaction().commit();
 		
 		}catch(Exception e) {
 			System.out.println("Error");
@@ -357,13 +344,8 @@ public class DepartmentManager {
 				System.out.println("Sorry, You can’t delete this country because it has entity in location table. ");
 			}else {
 			
-			
-			em.getTransaction().begin();
 			Country c_name = em.find(Country.class, id.get(0));
 		    em.remove(c_name);
-		    em.flush();
-			em.clear();
-			em.getTransaction().commit();
 			System.out.println("Successfully deleted.");
 			}
 		}catch(Exception e )
@@ -468,11 +450,7 @@ public class DepartmentManager {
 			co.setDetails(l_detailes);
 			
 			co.setCountryId(number);
-			em.getTransaction().begin();
 			em.persist(co);
-			em.flush();
-			em.clear();
-			em.getTransaction().commit();
 		
 			Location dbObject = em.createQuery("from Location c where c.name='" + name + "'",Location.class).getSingleResult();
 			
@@ -533,7 +511,6 @@ public class DepartmentManager {
 				
 			}else {
 				
-				em.getTransaction().begin();
 				Location c  = em.find(Location.class,number);
 				
 				String name_old  =  c.name;
@@ -542,9 +519,6 @@ public class DepartmentManager {
 				
 				updatablelocation(name_old,detailes_old,address_old,c);
 				System.out.println("Successfully Updated");
-				em.flush();
-				em.clear();
-				em.getTransaction().commit();
 				
 			}
 			
@@ -642,12 +616,8 @@ public class DepartmentManager {
 				
 				
 				}else {
-					em.getTransaction().begin();
 					Location L_name = em.find(Location.class,number);
 					em.remove(L_name);
-					em.flush();
-					em.clear();
-					em.getTransaction().commit();
 					System.out.println("Successfully deleted");
 					
 				}
@@ -739,11 +709,7 @@ public class DepartmentManager {
 				co.setDescription(l_description);
 				
 				co.setLocationId(number);
-				em.getTransaction().begin();
 				em.persist(co);
-				em.flush();
-				em.clear();
-				em.getTransaction().commit();
 			
 				Department dbObject = em.createQuery("from Department c where c.name='" + name + "'",Department.class).getSingleResult();
 				
@@ -804,7 +770,6 @@ public class DepartmentManager {
 						System.out.print("=>");
 					}else {
 						
-						em.getTransaction().begin();
 						Department c  = em.find(Department.class,number);
 						
 						String name_old  =  c.name;
@@ -813,9 +778,6 @@ public class DepartmentManager {
 						
 						updatabledepartment(name_old,description_old,address_old,c);
 						System.out.println("Successfully Updated");
-						em.flush();
-						em.clear();
-						em.getTransaction().commit();
 						
 					}
 					
@@ -910,14 +872,9 @@ public class DepartmentManager {
 						
 					}else {
 						 
-						em.getTransaction().begin();
 						Department L_name = em.find(Department.class,number);
 						em.remove(L_name);
-						em.flush();
-						em.clear();		
-						em.getTransaction().commit();
 						System.out.println("Successfully Deleted");
-						
 						
 					}
 					

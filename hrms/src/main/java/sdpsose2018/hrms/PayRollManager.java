@@ -4,18 +4,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
-import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import sdpsose2018.hrms.Employee.Gender;
 
 public class PayRollManager {
 
-	EntityManager em;
+	DatabaseConnection em;
 	Scanner sc;
 	Employee e;
 	
-	public PayRollManager(EntityManager em, Scanner sc, Employee e) {
+	public PayRollManager(DatabaseConnection em, Scanner sc, Employee e) {
 		
 		this.em = em;
 		this.sc = sc;
