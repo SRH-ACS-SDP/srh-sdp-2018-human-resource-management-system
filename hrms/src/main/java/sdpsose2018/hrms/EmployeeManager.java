@@ -9,16 +9,15 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 public class EmployeeManager {
 
 	List<Employee> employees;
-	EntityManager em;
+	DatabaseConnection em;
 	Scanner scanner;
 	
-	public EmployeeManager(EntityManager em, Scanner scanner) {
+	public EmployeeManager(DatabaseConnection em, Scanner scanner) {
 		
 		this.em = em;
 		this.scanner = scanner;
@@ -192,11 +191,7 @@ public class EmployeeManager {
 			}
 		} while (!isMaritalStatusValid);
 		
-		em.getTransaction().begin();
 		em.persist(employee);
-		em.flush();
-		em.clear();
-		em.getTransaction().commit();
 		
 		fetchEmployees();
 		System.out.println("Employee added.");
@@ -413,11 +408,7 @@ public class EmployeeManager {
 			employee.setDetails(details);
 		}
 		
-		em.getTransaction().begin();
 		em.persist(employee);
-		em.flush();
-		em.clear();
-		em.getTransaction().commit();
 		
 		fetchEmployees();
 		System.out.println("Employee edited.");
@@ -438,11 +429,7 @@ public class EmployeeManager {
 			return;
 		}
 		
-		em.getTransaction().begin();
 		em.remove(employee);
-		em.flush();
-		em.clear();
-		em.getTransaction().commit();
 		
 		fetchEmployees();
 		System.out.println("Employee " + employee.getId() + " successfully deleted.");
@@ -462,7 +449,7 @@ public class EmployeeManager {
 			scanner.nextLine();
 			return;
 		}
-		PayRollManager individualPayRollManager = new PayRollManager(em,scanner,employee);
+		PayRollManager individualPayRollManager = new PayRollManager(DatabaseConnection.getInstance(),scanner,employee);
 		individualPayRollManager.GeneratePayRoll();
 	}
 	

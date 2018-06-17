@@ -15,21 +15,19 @@ public class App
 	
     public static void main( String[] args )
     {
-    	EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu");
-    	EntityManager entityManager = emf.createEntityManager();
     	Scanner scanner = new Scanner(System.in);
-    	EmployeeManager employeeManager = new EmployeeManager(entityManager,scanner);
-    	DepartmentManager departmentManager = new DepartmentManager(entityManager,scanner);
-    	TrainingManager trainingManager = new TrainingManager(entityManager,scanner);
+    	EmployeeManager employeeManager = new EmployeeManager(DatabaseConnection.getInstance(),scanner);
+    	DepartmentManager departmentManager = new DepartmentManager(DatabaseConnection.getInstance(),scanner);
+    	TrainingManager trainingManager = new TrainingManager(DatabaseConnection.getInstance(),scanner);
     	
     	boolean isDone = false;
-    	do{
-    	System.out.println("Welcome to your personal Human Resource Management System.");
-    	System.out.println("**********************************************************");
-    	System.out.println("\nPlease enter a number of one option below to continue....\n");
-    	System.out.println("1.) Go to the Employee-Management-Module.");
-    	System.out.println("2.) Go to the Department-Management-Module.");
-    	System.out.println("3.) Go to the Training-Management-Module.");
+    	do {
+    		System.out.println("Welcome to your personal Human Resource Management System.");
+    		System.out.println("**********************************************************");
+    		System.out.println("\nPlease enter a number of one option below to continue....\n");
+    		System.out.println("1.) Go to the Employee-Management-Module.");
+    		System.out.println("2.) Go to the Department-Management-Module.");
+    		System.out.println("3.) Go to the Training-Management-Module.");
 			System.out.println("4.) Exit the application.");
 			System.out.print("\nEnter Number: ");
 			
@@ -42,8 +40,8 @@ public class App
 					break;
 				case 2:
 					departmentManager.call();
-          break;
-        case 3:
+					break;
+				case 3:
 					trainingManager.menuForTrainingManager();
 					break;
 				case 4:
@@ -62,7 +60,7 @@ public class App
 			}
     	} while(!isDone);
     	
-		entityManager.close();
+    	DatabaseConnection.getInstance().finalize();
     	scanner.close();
     	
     }
