@@ -925,7 +925,7 @@ public class DepartmentManager {
 			e.printStackTrace();
 		}
 	}
-	public void department(EntityManager em) {
+	public void department() {
 			
 					System.out.println("- Manage Departments -  ");
 					System.out.println("Please enter the number of one option below to continue.");
@@ -958,7 +958,7 @@ public class DepartmentManager {
 	}
 				
 
-	public void location(EntityManager em) {
+	public void location() {
 					
 					System.out.println("- Manage Locations -  ");
 					System.out.println("Please enter the number of one option below to continue.");
@@ -989,7 +989,7 @@ public class DepartmentManager {
 				}
 	}
 	
-	public void country(EntityManager em) {
+	public void country() {
 
     
     				System.out.println(" - Manage Countries - ");
@@ -1023,25 +1023,28 @@ public class DepartmentManager {
 	}
 	
     
-	public void start(EntityManager em){
+	public void start(){
 		
 				System.out.println("Please enter the number of one option below to continue");
 				System.out.println("1. Country ");
 				System.out.println("2. Location ");
 				System.out.println("3. Department ");
+				System.out.println("4. Go back to main menu.");
 				System.out.print("=>");
 				int number  =  Integer.parseInt(sc.nextLine());
 		
 				switch(number) {
 		
-				case 1 : country(em);
+				case 1 : country();
 							d_name="Country";
 							break;
-				case 2 : location(em); 
+				case 2 : location(); 
 							d_name="Location";
 							break;
-				case 3 : department(em);
+				case 3 : department();
 							d_name="Department";
+							break;
+				case 4 : d_name="Stop";
 							break;
 				default:
 						System.out.println("Invalid Input. Try again ! ");
@@ -1049,28 +1052,34 @@ public class DepartmentManager {
 		}
 		
 	}
-	public void call(EntityManager em){
+	public void call(){
 		
-		
-			start(em);
+			start();
+			
+			if(DepartmentManager.d_name.equals("Stop")) {
+				return;
+			}
     	
 			String answer ;
 			do {
-				System.out.println("Do you want to see the changes in this table or go back to main menu? Enter yes or no");
+				System.out.println("Do you want to see the changes in this table? Enter yes or no");
 				System.out.print("=>");
 					answer  = sc.nextLine();
     
 					if(answer.toLowerCase().equals("yes")) {
 						if (DepartmentManager.d_name.equals("Country")) {		
-							country(em);
+							country();
     		
 						}else if (DepartmentManager.d_name.equals("Location")) {
-							location(em);
+							location();
 						}else if (DepartmentManager.d_name.equals("Department")) {
-							department(em);
+							department();
 						}
 						} else {
-						start(em);
+						start();
+						if(DepartmentManager.d_name.equals("Stop")) {
+							return;
+						}
 						}
 				 }while(answer.toLowerCase() !="");
 		}
