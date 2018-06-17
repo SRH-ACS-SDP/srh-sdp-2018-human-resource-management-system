@@ -24,8 +24,6 @@ public class PayRollReportManager extends DynamicJasperReport {
 	private EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu");
  	private EntityManager em = emf.createEntityManager(); 	
 	
-	
-
 	public List<PayRollReport> getAllSalary(){
 		
 		List<PayRollReport> col =  new ArrayList<PayRollReport>();
@@ -148,7 +146,6 @@ public class PayRollReportManager extends DynamicJasperReport {
 		return dr;
 	}
 	
-	
 	@Override
 	public DynamicReport buildPaySlipReport() throws Exception {
 		Style titleStyle = new Style("titleStyle");
@@ -194,16 +191,5 @@ public class PayRollReportManager extends DynamicJasperReport {
 
 		return dr;
 	}
-	
-	public static void main( String[] args ) throws Exception
-	
-    {
-     PayRollReportManager prs = new PayRollReportManager();
-     
-     prs.generatePayRollReport();
-     
-     prs.generatePaySlipReport(181);
-    }
-
 	
 }

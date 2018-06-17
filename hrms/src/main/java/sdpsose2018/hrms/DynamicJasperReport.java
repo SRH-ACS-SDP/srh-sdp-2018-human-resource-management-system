@@ -63,7 +63,6 @@ public abstract class DynamicJasperReport {
 
     }
     
-    
     public void generatePaySlipReport(int empdID) throws Exception {
         dr = buildPaySlipReport();
 
