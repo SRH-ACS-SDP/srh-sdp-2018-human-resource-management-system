@@ -150,7 +150,7 @@ public class TrainingManager {
 	}
 	
 	public void viewTraining() {
-		
+		fetchTraining();
 		StringBuilder stringBuilder = new StringBuilder();
 		System.out.println("\n_____View all available Trainings_____");
 		stringBuilder.append(String.format("%147s\n", "").replace(' ', '_'));
@@ -532,6 +532,7 @@ public class TrainingManager {
 		System.out.println("2. Edit Training ");
 		System.out.println("3. View Training ");
 		System.out.println("4. Delete Training ");
+		System.out.println("5. Go back to main menu.");
 		try {
 			System.out.print("\nEnter Number: ");
 			number  =  Integer.parseInt(sc.nextLine());
@@ -564,7 +565,9 @@ public class TrainingManager {
 							}
 						is_valid = false;
 						break;
-		
+						
+				case 5: return;
+						
 				default: System.out.println("Invalid Number. Try again ! ");
 						is_valid = true;
 			}	

@@ -116,7 +116,7 @@ public class CourseManager {
 	}
 	
 	public void viewSpecificCourse(int courseId) {
-		
+		fetchCourse();
 		StringBuilder stringBuilder = new StringBuilder();
 		System.out.println("\n_____View Course ID: " +courseId+ "_____");
 		stringBuilder.append(String.format("%142s\n", "").replace(' ', '_'));
@@ -177,7 +177,6 @@ public class CourseManager {
 			updateCourseFunc(name_old,description_old,requiredSkills_old,acquiredSkills_old,mentorSkills_old,c);
 			System.out.println("\nCourse has been updated successfully!!!!");
 			System.out.println("______________________________________________________________");
-			courses = em.createQuery("from Course", Course.class).getResultList();
 			
 			}catch(Exception e) {
 				e.printStackTrace();
@@ -278,6 +277,7 @@ public class CourseManager {
 				em.getTransaction().begin();
 				em.remove(c);
 				em.getTransaction().commit();
+				fetchCourse();
 				System.out.println("\nCourse has been deleted successfully!!!!");
 				System.out.print("______________________________________________________________");
 		}else {
