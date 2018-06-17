@@ -190,6 +190,8 @@ public class EmployeeManager {
 		
 		em.getTransaction().begin();
 		em.persist(employee);
+		em.flush();
+		em.clear();
 		em.getTransaction().commit();
 		
 		fetchEmployees();
@@ -409,6 +411,8 @@ public class EmployeeManager {
 		
 		em.getTransaction().begin();
 		em.persist(employee);
+		em.flush();
+		em.clear();
 		em.getTransaction().commit();
 		
 		fetchEmployees();
@@ -432,6 +436,8 @@ public class EmployeeManager {
 		
 		em.getTransaction().begin();
 		em.remove(employee);
+		em.flush();
+		em.clear();
 		em.getTransaction().commit();
 		
 		fetchEmployees();
