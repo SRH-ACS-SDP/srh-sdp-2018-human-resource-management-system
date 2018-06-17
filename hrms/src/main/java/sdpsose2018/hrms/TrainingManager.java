@@ -26,11 +26,17 @@ public class TrainingManager {
 	public TrainingManager (EntityManager em, Scanner sc) {
 		this.em = em;
 		this.sc = sc;
+	}
+	
+	public void fetchTraining() {
 		trainigs = em.createQuery("from Training", Training.class).getResultList();
 	}
 	
 	public void addTraining() {
+		
 		CourseManager mc = new CourseManager(em, sc);
+		EmployeeManager ema = new EmployeeManager(em, sc);
+		
 		Training tr = new Training();
 		
 		boolean is_valid  =  true;
@@ -109,7 +115,7 @@ public class TrainingManager {
 						
 						if (c == 'y') {
 							
-							//Call: ViewEmployee();
+							ema.viewEmployees();
 							conductorId = validateConductorIdInput();
 							if (conductorId == 0) {
 								return;
@@ -133,7 +139,10 @@ public class TrainingManager {
 				
 				em.getTransaction().begin();
 				em.persist(tr);
+				em.flush();
+				em.clear();
 				em.getTransaction().commit();
+				fetchTraining();
 		System.out.println("\nAdded a Record Successfully!!!!!!!");
 		System.out.print("______________________________________________________________");
 		whatNext();
@@ -153,7 +162,7 @@ public class TrainingManager {
 			if(t.getEmployeeId() != null) {
 				stringBuilder.append(String.format("%-25s|", t.getEmployeeId()).replace(' ', '_'));
 			} else {
-				stringBuilder.append(String.format("%-25s|", "".replace(' ', '_')));
+				stringBuilder.append(String.format("%-25s|", "").replace(' ', '_'));
 			}
 				
 			stringBuilder.append(String.format("%-25s|", t.getCourseId()).replace(' ', '_'));
@@ -161,19 +170,20 @@ public class TrainingManager {
 			if(t.getEmployeeId() != null) {
 				stringBuilder.append(String.format("%-25s|", new SimpleDateFormat("yyyy.MM.dd").format(t.getDate())).replace(' ', '_'));
 			} else {
-				stringBuilder.append(String.format("%-25s|","".replace(' ', '_')));
+				stringBuilder.append(String.format("%-25s|","").replace(' ', '_'));
 			}
 			
 			if(t.getEmployeeId() != null) {
 				stringBuilder.append(String.format("%-25s|", t.getResult()).replace(' ', '_'));
 			} else {
-				stringBuilder.append(String.format("%-25s|","".replace(' ', '_')));
+				stringBuilder.append(String.format("%-25s|","").replace(' ', '_'));
 			}
 			
 
 			stringBuilder.append("\n");
 		}
 		System.out.println(stringBuilder.toString());
+		
 	}
 	
 	public void updateTraining() {
@@ -192,32 +202,42 @@ public class TrainingManager {
 					if (c == 'y') {
 						viewTraining();
 						do{
-							System.out.print("Enter Training ID: ");
-							id  = Integer.parseInt(sc.nextLine());
-							Query query =em.createQuery("Select id from Training c where c.id = :id");
-							query.setParameter("id", id);
-							List ids = query.getResultList();
-							if(ids.size() != 0 ){
-								is_valid = false;
-							}else{
-								System.out.println("Please enter a valid Training ID");
-								is_valid = true;
-							}
-						}while(is_valid);
+							System.out.print("\nEnter Training ID: ");
+							try {
+								id  = Integer.parseInt(sc.nextLine());
+								Query query =em.createQuery("Select id from Training c where c.id = :id");
+								query.setParameter("id", id);
+								List ids = query.getResultList();
+								if(ids.size() != 0 ){
+									is_valid = false;
+								}else{
+									System.out.println("Course not exists in Database.");
+									is_valid = true;
+								}
+								} catch (NumberFormatException nfe) {
+									System.out.println("Not a valid number.");
+									is_valid = true;
+								}
+							}while(is_valid);
 			
 					}else if (c == 'n') {
 						do{
 							System.out.print("\nEnter Training ID: ");
-							id  = Integer.parseInt(sc.nextLine());
-							Query query =em.createQuery("Select id from Training c where c.id = :id");
-							query.setParameter("id", id);
-							List ids = query.getResultList();
-							if(ids.size() != 0 ){
-								is_valid = false;
-							}else{
-								System.out.println("Please enter a valid Training ID");
-								is_valid = true;
-							}
+							try {
+								id  = Integer.parseInt(sc.nextLine());
+								Query query =em.createQuery("Select id from Training c where c.id = :id");
+								query.setParameter("id", id);
+								List ids = query.getResultList();
+								if(ids.size() != 0 ){
+									is_valid = false;
+								}else{
+									System.out.println("Please enter a valid Training ID");
+									is_valid = true;
+								}
+								}catch (NumberFormatException nfe) {
+									System.out.println("Not a valid number.");
+									is_valid = true;
+								}
 						}while(is_valid);
 					}
 				}else {
@@ -239,8 +259,7 @@ public class TrainingManager {
 			
 			updateTrainingFunc(employeeId_old,courseId_old,conductorId_old,date_old,result_old,t);
 			System.out.println("\nTraining has been updated successfully!!!!");
-			System.out.println("______________________________________________________________");
-			trainigs = em.createQuery("from Training", Training.class).getResultList();
+			System.out.print("______________________________________________________________");
 			whatNext();
 			
 			}catch(Exception e) {
@@ -256,9 +275,7 @@ public class TrainingManager {
 		System.out.println("\nEmployee ID is " +employeeId_old+ " (Nothing to update -> Please leave blank.)");
 		System.out.print("Enter new Employee ID: ");
 		String employeeId_new =  sc.nextLine();
-		if (employeeId_new.equals("")) {
-			tr.setEmployeeId(employeeId_old);
-		}else {
+		if (!employeeId_new.equals("")) {
 			tr.setEmployeeId(employeeId_new);
 		}
 		
@@ -274,7 +291,7 @@ public class TrainingManager {
 			if (c == 'y') {
 				mc.updateSpecificCourse(courseId_old);
 			}else if (c == 'n') {
-				System.out.print("Do you want to view All Courses?(y/n)");
+				System.out.print("Do you want to change the course?(y/n):");
 				c = sc .nextLine().charAt(0);
 		
 				if (c == 'y') {
@@ -282,21 +299,12 @@ public class TrainingManager {
 					System.out.println("(Nothing to update -> Please leave blank.)");
 					System.out.print("Enter new Course ID: ");
 					String CourseId_new = sc.nextLine();
-						if (CourseId_new.equals("")) {
-							tr.setCourseId(courseId_old);
-						}else {
-							tr.setCourseId(Integer.parseInt(CourseId_new));
-						}
+					if (!CourseId_new.equals("")) {
+						tr.setCourseId(Integer.parseInt(CourseId_new));
+					}
 			
 				}else if(c == 'n') {
-					System.out.println("\n(Nothing to update -> Please leave blank.)");
-					System.out.print("Enter new Course ID: ");
-					String CourseId_new = sc.nextLine();
-						if (CourseId_new.equals("")) {
 							tr.setCourseId(courseId_old);
-						}else {
-							tr.setCourseId(Integer.parseInt(CourseId_new));
-						}
 				}
 			}
 		}else {
@@ -307,10 +315,8 @@ public class TrainingManager {
 		
 		System.out.println("\nConductor ID is " +conductorId_old+ " (Nothing to update -> Please leave blank.)");
 		System.out.print("Enter new Conductor ID:  ");
-		String conductorId_new =  sc.nextLine();
-		if (conductorId_new.equals("")) {
-			tr.setConductorId(conductorId_old);
-		}else {
+		String conductorId_new = sc.nextLine();
+		if (!conductorId_new.equals("")) {
 			tr.setConductorId(Integer.parseInt(conductorId_new));
 		}
 		
@@ -342,13 +348,13 @@ public class TrainingManager {
 		System.out.println("\nResult is " +result_old+ " (Nothing to update -> Please leave blank.)");
 		System.out.print("Enter new Result:  ");
 		String result_new =  sc.nextLine();
-		if (result_new.equals("")) {
-			tr.setResult(result_old);
-		}else {
+		if (!result_new.equals("")) {
 			tr.setResult(result_new);
-		}		
+		}
+		
 		em.merge(tr);
 		em.getTransaction().commit();
+		fetchTraining();
 }
 	
 	public void deleteTraining() {
@@ -406,8 +412,9 @@ public class TrainingManager {
 				em.getTransaction().begin();
 				em.remove(t);
 				em.getTransaction().commit();
+				fetchTraining();
 				System.out.println("\nTraining has been deleted!!!!");
-				System.out.println("______________________________________________________________");
+				System.out.print("______________________________________________________________");
 			}else {
 					System.out.println("Invalid Input!");
 					System.out.println();
@@ -423,15 +430,16 @@ public class TrainingManager {
 		
 		boolean isInputValid = false;
 		do {
-			System.out.print("Enter Course ID: ");
+			System.out.print("\nEnter Course ID: ");
 			int intCourseId = 0;
 			try {
 				intCourseId = Integer.parseInt(sc.nextLine());
-				em.createQuery("from Course where id = '"+ courseId +"'").getSingleResult();	
-				System.out.println("Course already exists in Database.");
-			} catch (NoResultException nre) {
+				em.createQuery("from Course where id = '"+ intCourseId +"'").getSingleResult();	
 				isInputValid = true;
 				return intCourseId;
+			} catch (NoResultException nre) {
+				System.out.println("Course not exists in Database.");
+				isInputValid = false;
 			} catch (NumberFormatException nfe) {
         		System.out.println("Not a valid number.");
 				isInputValid = false;
@@ -463,15 +471,16 @@ public class TrainingManager {
 		
 		boolean isInputValid = false;
 		do {
-			System.out.print("Enter Conductor ID: ");
+			System.out.print("\nEnter Conductor ID: ");
 			int intConductorId = 0;
 			try {
 				intConductorId = Integer.parseInt(sc.nextLine());
-				em.createQuery("from Course where id = '"+ conductorId +"'").getSingleResult();	
-				System.out.println("Course already exists in Database.");
-			} catch (NoResultException nre) {
+				em.createQuery("from Course where id = '"+ intConductorId +"'").getSingleResult();	
 				isInputValid = true;
 				return intConductorId;
+			} catch (NoResultException nre) {
+				System.out.println("Employee ID not exists in Database.");
+				isInputValid = false;
 			} catch (NumberFormatException nfe) {
         		System.out.println("Not a valid number.");
 				isInputValid = false;
@@ -519,25 +528,28 @@ public class TrainingManager {
 	
 		System.out.println("\n_____Training_Module_____\n");
 	do {
-		System.out.println("1. New Training ");
+		System.out.println("\n1. New Training ");
 		System.out.println("2. Edit Training ");
 		System.out.println("3. View Training ");
 		System.out.println("4. Delete Training ");
 		try {
-			System.out.print("Input ->");
+			System.out.print("\nEnter Number: ");
 			number  =  Integer.parseInt(sc.nextLine());
 		
 			switch(number) {
 		
 				case 1 :addTraining();
+						whatNext();
 						is_valid = false;
 						break;
 			
 				case 2 :updateTraining();
+						whatNext();
 						is_valid = false;
 						break;
 						
 				case 3 :viewTraining();
+						whatNext();
 						is_valid = false;
 						break;
 		
@@ -557,7 +569,7 @@ public class TrainingManager {
 						is_valid = true;
 			}	
 		}catch (Exception e) {
-			System.out.println("Invalid Number. Try again ! ");
+			System.out.println("Please Enter Valid Number! ");
 			is_valid = true;
 		}
 		}while(is_valid);

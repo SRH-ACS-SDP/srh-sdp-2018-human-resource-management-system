@@ -23,6 +23,10 @@ public class CourseManager {
 		courses = em.createQuery("from Course", Course.class).getResultList();
 	}
 	
+	public void fetchCourse() {
+		trainigs = em.createQuery("from Training", Training.class).getResultList();
+	}
+	
 	//Add
 	
 	public void addCourse() {
@@ -82,13 +86,14 @@ public class CourseManager {
 	
 		em.getTransaction().begin();
 		em.persist(co);
-		System.out.println("Course has been added successfully!!!!");
+		em.flush();
+		em.clear();
 		em.getTransaction().commit();
-		courses = em.createQuery("from Course", Course.class).getResultList();
+		fetchCourse();
+		System.out.println("Course has been added successfully!!!!");
 }
 	
 	//View
-	
 	public void viewAllCourse() {
 		
 		StringBuilder stringBuilder = new StringBuilder();
@@ -181,51 +186,38 @@ public class CourseManager {
 	
 	private void updateCourseFunc(String name,String description,String requiredSkills,String acquiredSkills,String mentorSkills,Course co){
 		
-		int  count  =0;
 		System.out.println("\nCourse name is " +name+ " (Nothing to update -> Please leave blank.)");
 		System.out.print("Enter the new Course name: ");
 		String new_name =  sc.nextLine();
-		if (new_name.equals("")) {
-			co.setName(name);
-			count++;
-		}else {
+		if (!new_name.equals("")) {
 			co.setName(new_name);
-			count++;
 		}
 		
 		System.out.println("\nDescription is " +description+ " (Nothing to update -> Please leave blank.)");
 		System.out.print("Enter the new Description: ");
 		String new_description=  sc.nextLine();
-		if (new_description.equals("")) {
-			co.setDescription(description);
-		}else {
+		if (!new_description.equals("")) {
 			co.setDescription(new_description);
 		}
 		
 		System.out.println("\nRequired Skill is " +requiredSkills+ " (Nothing to update -> Please leave blank.)");
 		System.out.print("Enter the new Required Skills: ");
 		String new_requiredSkills =  sc.nextLine();
-		if (new_requiredSkills.equals("")) {
-			co.setRequiredSkills(requiredSkills);
-		}else {
+		if (!new_requiredSkills.equals("")) {
 			co.setRequiredSkills(new_requiredSkills);
 		}
 		
 		System.out.println("\nAcquired Skill is " +acquiredSkills+ " (Nothing to update -> Please leave blank.)");
 		System.out.print("Enter the new Acquired Skills: ");
 		String new_acquiredSkills =  sc.nextLine();
-		if (new_acquiredSkills.equals("")) {
-			co.setAcquiredSkills(acquiredSkills);
-		}else {
+		if (!new_acquiredSkills.equals("")) {
 			co.setAcquiredSkills(new_acquiredSkills);
 		}
 		
 		System.out.println("\nMentor Skill is " +mentorSkills+ " (Nothing to update -> Please leave blank.)");
 		System.out.print("Enter the new Mentor Skills: ");
 		String new_mentorSkills =  sc.nextLine();
-		if (new_mentorSkills.equals("")) {
-			co.setMentorSkills(mentorSkills);
-		}else {
+		if (!new_mentorSkills.equals("")) {
 			co.setMentorSkills(new_mentorSkills);
 		}
 }
@@ -256,7 +248,7 @@ public class CourseManager {
 								is_valid = true;
 							}
 					}catch (NumberFormatException nfe) {
-							System.out.println("Please enter a valid Training ID");
+							System.out.println("Course ID not exists in Database");
 							is_valid = true;
 					}
 			}while(is_valid);
@@ -273,35 +265,26 @@ public class CourseManager {
 						if(ids.size() != 0 ){
 							is_valid = false;
 							}else{
-								System.out.println("Please enter a valid Training ID");
+								System.out.println("Course ID not exists in Database");
 								is_valid = true;
 							}
 					}catch (NumberFormatException nfe) {
-							System.out.println("Please enter a valid Training ID");
+							System.out.println("Invalid Input");
 							is_valid = true;
 					}
 			}while(is_valid);
 			}
-			
-			Course c = em.find(Course.class, id );	
-			try {
+				Course c = em.find(Course.class, id );	
 				em.getTransaction().begin();
 				em.remove(c);
 				em.getTransaction().commit();
 				System.out.println("\nCourse has been deleted successfully!!!!");
-				System.out.println("______________________________________________________________");
-			} catch (Exception e) {
-				System.out.println("\nThis course has been linked with a Training");
-				System.out.println("Course Delete not Successfull!!!!");
-			}
-		
+				System.out.print("______________________________________________________________");
 		}else {
 			System.out.println("Invalid Input!");
 			System.out.println();
 		}
 		}while(is_valid);
-		
-	
-}
+	}
 		
 }
