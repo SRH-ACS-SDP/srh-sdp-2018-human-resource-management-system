@@ -1024,7 +1024,7 @@ public class DepartmentManager {
 	
     
 	public void start(){
-		
+				System.out.println("- Department Management Module -");
 				System.out.println("Please enter the number of one option below to continue");
 				System.out.println("1. Country ");
 				System.out.println("2. Location ");
