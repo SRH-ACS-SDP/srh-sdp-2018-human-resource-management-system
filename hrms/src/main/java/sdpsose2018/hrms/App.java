@@ -19,6 +19,7 @@ public class App
     	EmployeeManager employeeManager = new EmployeeManager(DatabaseConnection.getInstance(),scanner);
     	DepartmentManager departmentManager = new DepartmentManager(DatabaseConnection.getInstance(),scanner);
     	TrainingManager trainingManager = new TrainingManager(DatabaseConnection.getInstance(),scanner);
+    	PayRollReportManager prs = new PayRollReportManager();  	     	
     	
     	boolean isDone = false;
     	do {
@@ -28,7 +29,9 @@ public class App
     		System.out.println("1.) Go to the Employee-Management-Module.");
     		System.out.println("2.) Go to the Department-Management-Module.");
     		System.out.println("3.) Go to the Training-Management-Module.");
-			System.out.println("4.) Exit the application.");
+    		System.out.println("4.) Generate PayRoll-Report.");
+    		System.out.println("5.) Generate PaySlip-Report.");
+			System.out.println("6.) Exit the application.");
 			System.out.print("\nEnter Number: ");
 			
 			try {
@@ -45,6 +48,31 @@ public class App
 					trainingManager.menuForTrainingManager();
 					break;
 				case 4:
+					try {
+			    		prs.generatePayRollReport();
+					} catch(Exception e) {
+			    		System.out.println(e.getMessage());
+					}
+					break;
+				case 5:
+					try {
+						System.out.println("Please enter the employee's ID.");
+						int id = Integer.parseInt(scanner.nextLine());
+						
+						Employee employee = DatabaseConnection.getInstance().find(Employee.class, id);
+						
+						if(employee == null) {
+							System.out.println("No employee with ID = " + id + " found.");
+							System.out.println("Press enter to continue.");
+							scanner.nextLine();
+							break;
+						}
+						prs.generatePaySlipReport(id);						
+					} catch (Exception e) {
+						System.out.println(e.getMessage());
+					}
+					break;
+				case 6:
 					System.out.println("Thanks for using this Human Resource Management System.");
 					System.out.println("Bye.");
 					scanner.nextLine();

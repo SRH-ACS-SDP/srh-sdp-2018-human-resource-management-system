@@ -4,9 +4,11 @@ import java.util.Date;
 
 import javax.persistence.*;
 
+@Entity
 @Table(name = "employees_jobs_assignments")
 public class EmployeeJobAssignment {
 
+	@Id
 	@JoinColumn(name = "employee_id")
 	@Column(name = "employee_id")
 	int employeeId;
