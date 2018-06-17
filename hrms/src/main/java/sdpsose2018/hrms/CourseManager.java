@@ -95,7 +95,7 @@ public class CourseManager {
 	
 	//View
 	public void viewAllCourse() {
-		
+		fetchCourse();
 		StringBuilder stringBuilder = new StringBuilder();
 		System.out.println("\n_____View all available Courses_____");
 		stringBuilder.append(String.format("%142s\n", "").replace(' ', '_'));
