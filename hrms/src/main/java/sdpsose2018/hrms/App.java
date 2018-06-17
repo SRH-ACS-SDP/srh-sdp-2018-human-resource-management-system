@@ -26,8 +26,8 @@ public class App
     	do{
     		System.out.println("Welcome to your personal Human Resource Management System.");
     		System.out.println("**********************************************************");
-    		System.out.println("\nPlease enter a number of one option below to continue....");
-    		System.out.println("\n1.) Go to the Employee-Management-Module.");
+    		System.out.println("\nPlease enter a number of one option below to continue....\n");
+    		System.out.println("1.) Go to the Employee-Management-Module.");
     		System.out.println("2.) Go to the Training-Management-Module.");
 			System.out.println("3.) Exit the application.");
 			System.out.print("\nEnter Number: ");
