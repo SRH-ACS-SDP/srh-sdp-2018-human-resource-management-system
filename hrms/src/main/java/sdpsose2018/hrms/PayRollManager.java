@@ -15,11 +15,11 @@ public class PayRollManager {
 	Scanner sc;
 	Employee e;
 	
-	public PayRollManager(EntityManager em, Scanner sc, int employeeId) {
+	public PayRollManager(EntityManager em, Scanner sc, Employee e) {
 		
 		this.em = em;
 		this.sc = sc;
-		this.e = em.find(Employee.class, employeeId);
+		this.e = e;
 		
 	}
 	

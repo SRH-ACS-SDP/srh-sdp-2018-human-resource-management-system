@@ -31,10 +31,11 @@ public class EmployeeManager {
 			System.out.println("- Manage your Employees -");
 			System.out.println("Please enter the number of one option below to continue.");
 			System.out.println("1.) View employees.");
-			System.out.println("2.) Add an employeee.");
-			System.out.println("3.) Update an employeee.");
-			System.out.println("4.) Delete an employeee.");
-			System.out.println("5.) Go back to main menu.");
+			System.out.println("2.) Add an employee.");
+			System.out.println("3.) Update an employee.");
+			System.out.println("4.) Delete an employee.");
+			System.out.println("5.) Manage an employee's payroll.");
+			System.out.println("6.) Go back to main menu.");
 			
 			try {
 				int input = Integer.parseInt(scanner.nextLine());
@@ -52,6 +53,9 @@ public class EmployeeManager {
 					deleteEmployee();
 					break;
 				case 5:
+					managePayRoll();
+					break;
+				case 6:
 					return;
 				default:
 					System.out.println("Input is invalid.");
@@ -444,6 +448,22 @@ public class EmployeeManager {
 		System.out.println("Employee " + employee.getId() + " successfully deleted.");
 		System.out.println("Press enter to continue.");
 		scanner.nextLine();
+	}
+	
+	public void managePayRoll() {
+		System.out.println("Please enter the employee's ID.");
+		int id = Integer.parseInt(scanner.nextLine());
+		
+		Employee employee = em.find(Employee.class, id);
+		
+		if(employee == null) {
+			System.out.println("No employee with ID = " + id + " found.");
+			System.out.println("Press enter to continue.");
+			scanner.nextLine();
+			return;
+		}
+		PayRollManager individualPayRollManager = new PayRollManager(em,scanner,employee);
+		individualPayRollManager.GeneratePayRoll();
 	}
 	
 	public void viewEmployees() {
