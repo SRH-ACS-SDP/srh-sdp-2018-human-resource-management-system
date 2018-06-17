@@ -2,17 +2,16 @@ package sdpsose2018.hrms;
 
 import javax.persistence.*;
 
-import org.hibernate.annotations.Immutable;
-
 @Entity
 @Table(name = "courses")
-@Immutable
+
 public class Course {
 
+	
 	@Id
 	@Column(name = "course_id")
 	int id;
-	
+
 	String name;
 	
 	String description;

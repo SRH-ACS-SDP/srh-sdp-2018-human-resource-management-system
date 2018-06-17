@@ -1,12 +1,11 @@
 package sdpsose2018.hrms;
 
-import javax.persistence.*;
+import java.util.Date;
 
-import org.hibernate.annotations.Immutable;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "trainings")
-@Immutable
 public class Training {
 
 	@Id
@@ -25,7 +24,7 @@ public class Training {
 	@Column(name = "conductor_id")
 	int conductorId;
 	
-	int date;
+	Date date;
 	
 	String result;
 
@@ -61,11 +60,11 @@ public class Training {
 		this.conductorId = conductorId;
 	}
 
-	public int getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(int date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 
