@@ -14,6 +14,7 @@ public class Skill {
 	
 	String description;
 	
+	@Column(name = "DIFFICULT")
 	int difficulty;
 
 	public int getId() {
